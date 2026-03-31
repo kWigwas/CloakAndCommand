@@ -209,10 +209,9 @@ public static class GameSettings
     }
 
     /// <summary>
-    /// When all sliders are at 100%, multiply linear gain by this before dB mapping so the stack
-    /// (Master × Music/SFX) is not screaming at unity gain. Tune 0.35–0.55 for overall loudness.
+    /// Linear gain cap used for mixer/fallback mapping. Set to 1 so 100% sliders are true full scale.
     /// </summary>
-    internal const float MixerFullSliderLinearCap = 0.4f;
+    internal const float MixerFullSliderLinearCap = 1f;
 
     private static void SetMixerGroupVolume(AudioMixer mixer, string parameter, float linear01)
     {

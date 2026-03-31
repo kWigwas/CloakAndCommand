@@ -67,10 +67,12 @@ public class EnemyAI : MonoBehaviour
     private bool _searchFollowedChase;
     private Coroutine _flashRoutine;
 
-    private bool _playedFirstSuspiciousSting;
+    private bool _hasEnteredChaseSequence;
 
-    /// <summary>Watcher: sprinter roll uses count &gt;= 2 (first chase never spawns sprinters).</summary>
-    private int _watcherChaseEnterCount;
+    /// <summary>Watcher reinforcement gating flags/state.</summary>
+    private bool _watcherFirstChaseHasEnded;
+    private bool _watcherBulwarksSpawnedThisChase;
+    private float _watcherCurrentChaseElapsed;
 
     private bool _sprinterFlow;
     private Vector2 _sprInvestigateCenter;
@@ -92,7 +94,19 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
-        if (_archetype != null && _archetype.Kind == EnemyKind.Sprinter)
+        // Summoned flow should key off deployment payload, not prefab kind alone.
+        // This avoids silent failure if a variant is misconfigured as non-Sprinter.
+        if (GetComponent<EnemySprinterDeployment>() != null)
+        {
+            if (_archetype != null && _archetype.Kind != EnemyKind.Sprinter)
+            {
+                Debug.LogWarning(
+                    $"{nameof(EnemyAI)} on '{name}': has {nameof(EnemySprinterDeployment)} but archetype kind is {_archetype.Kind}. Running sprinter summoned flow anyway.",
+                    this);
+            }
+            TryBeginSprinterSummonedFlow();
+        }
+        else if (_archetype != null && _archetype.Kind == EnemyKind.Sprinter)
             TryBeginSprinterSummonedFlow();
     }
 
@@ -105,9 +119,11 @@ public class EnemyAI : MonoBehaviour
             _sprInvestigateCenter = dep.InvestigationCenter;
             _sprOffscreenMargin = dep.OffscreenMargin;
             _sprSweepRadius = dep.SweepOrbitRadius;
-            PickSprinterDeployTarget(dep.ApproachRingMin, dep.ApproachRingMax);
+            // Summoned sprinters should converge on the watcher's detected player location first.
+            _sprDeployTarget = _sprInvestigateCenter;
             _sprSweepTheta = Random.Range(0f, Mathf.PI * 2f);
             _state = State.SprinterDeploy;
+            _vision.SetConeColor(_vision.SuspiciousFlashColor);
             Destroy(dep);
         }
         else
@@ -118,7 +134,6 @@ public class EnemyAI : MonoBehaviour
             _sprOffscreenMargin = _archetype != null ? _archetype.OffscreenMarginWorld : 2f;
             _state = State.SprinterSweep;
             _sprSweepTheta = Random.Range(0f, Mathf.PI * 2f);
-            StartFlash();
             _vision.SetConeColor(_vision.SuspiciousFlashColor);
         }
 
@@ -162,6 +177,11 @@ public class EnemyAI : MonoBehaviour
 
         switch (_state)
         {
+            case State.Idle:
+                // Only do idle in-place look if patrol is not currently driving movement.
+                if (patrolBehaviour == null || !patrolBehaviour.enabled)
+                    _movement.IdleLookAround(Time.fixedDeltaTime);
+                break;
             case State.Suspicious:
                 _movement.RotateSuspicious(_vision.PlayerTransform.position);
                 break;
@@ -271,16 +291,15 @@ public class EnemyAI : MonoBehaviour
     private void EnterSprinterSweep()
     {
         _state = State.SprinterSweep;
-        StartFlash();
         _vision.SetConeColor(_vision.SuspiciousFlashColor);
     }
 
     private void EnterSprinterChase()
     {
-        StopFlash();
         _state = State.SprinterChase;
+        _hasEnteredChaseSequence = true;
         _sprinterChaseBlindTimer = 0f;
-        _vision.SetConeColor(_vision.ChaseConeColor);
+        _vision.SetConeColor(_vision.SuspiciousFlashColor);
         if (_vision.PlayerTransform != null)
             _movement.ResetSprinterStaleChase(_vision.PlayerTransform.position);
         PlayRandomOneShot(chaseStartClips, chaseStartVolume);
@@ -289,9 +308,8 @@ public class EnemyAI : MonoBehaviour
 
     private void EnterSprinterLeave()
     {
-        StopFlash();
         _state = State.SprinterLeave;
-        _vision.SetConeColor(_vision.SearchConeColor);
+        _vision.SetConeColor(_vision.SuspiciousFlashColor);
         _sprLeaveTarget = OffScreenSpawn2D.RandomBeyondView(Camera.main, _sprOffscreenMargin);
     }
 
@@ -331,6 +349,9 @@ public class EnemyAI : MonoBehaviour
     {
         if (_vision.PlayerTransform == null) return;
 
+        if (_archetype != null && _archetype.Kind == EnemyKind.Watcher)
+            TickWatcherBulwarkSpawnWhileInChase();
+
         if (PlayerIsDetected())
             _chaseLoseSightTimer = 0f;
         else
@@ -358,6 +379,14 @@ public class EnemyAI : MonoBehaviour
         _searchFollowedChase = false;
         StopFlash();
         _vision.SetConeColor(_vision.CalmConeColor);
+        if (_archetype != null && _archetype.Kind == EnemyKind.Watcher)
+        {
+            float half = Mathf.Clamp(_archetype.IdleSwayDegrees, 2f, 24f);
+            float sweep = Mathf.Max(4f, _archetype.IdleSwaySpeed * 10f);
+            _movement.BeginIdleLookAround(half, sweep, 0.55f);
+        }
+        else
+            _movement.BeginIdleLookAround(8f, 10f, 0.5f);
 
         if (patrolBehaviour != null)
             patrolBehaviour.enabled = true;
@@ -377,10 +406,12 @@ public class EnemyAI : MonoBehaviour
             patrolBehaviour.enabled = false;
 
         StartFlash();
-        if (!_playedFirstSuspiciousSting && HasAnyClip(playerSpottedClips))
+        if (!_hasEnteredChaseSequence)
         {
-            PlayRandomOneShot(playerSpottedClips, spottedVolume);
-            _playedFirstSuspiciousSting = true;
+            if (HasAnyClip(playerSpottedClips))
+                PlayRandomOneShot(playerSpottedClips, spottedVolume);
+            else if (HasAnyClip(reSuspiciousClips))
+                PlayRandomOneShot(reSuspiciousClips, reSuspiciousVolume);
         }
         else if (HasAnyClip(reSuspiciousClips))
             PlayRandomOneShot(reSuspiciousClips, reSuspiciousVolume);
@@ -404,12 +435,18 @@ public class EnemyAI : MonoBehaviour
         if (fromChase)
             PlayRandomOneShot(chaseEndClips, chaseEndVolume);
 
+        if (fromChase && _archetype != null && _archetype.Kind == EnemyKind.Watcher)
+            _watcherFirstChaseHasEnded = true;
+
         onEnterSearch?.Invoke();
     }
 
     private void EnterChase()
     {
         _state = State.Chase;
+        _hasEnteredChaseSequence = true;
+        _watcherCurrentChaseElapsed = 0f;
+        _watcherBulwarksSpawnedThisChase = false;
         _searchFollowedChase = false;
         _chaseLoseSightTimer = 0f;
         StopFlash();
@@ -428,12 +465,30 @@ public class EnemyAI : MonoBehaviour
     {
         if (_archetype == null || _vision.PlayerTransform == null) return;
 
-        _watcherChaseEnterCount++;
-        _archetype.SpawnWatcherBulwarksOnEnterChase(transform);
+        // Sprinters: roll every chase entry.
+        if (Random.value <= _archetype.SprinterReinforceChanceAfterFirstCycle)
+            _archetype.SpawnWatcherSprinterReinforcements(transform, _vision.PlayerTransform.position, Camera.main);
 
-        if (_watcherChaseEnterCount < 2) return;
-        if (Random.value > _archetype.SprinterReinforceChanceAfterFirstCycle) return;
-        _archetype.SpawnWatcherSprinterReinforcements(transform, _vision.PlayerTransform.position, Camera.main);
+        // Bulwarks: only after first chase has ended, OR during first chase once it lasts long enough.
+        if (_watcherFirstChaseHasEnded)
+            SpawnWatcherBulwarksNow();
+    }
+
+    private void TickWatcherBulwarkSpawnWhileInChase()
+    {
+        if (_watcherBulwarksSpawnedThisChase || _watcherFirstChaseHasEnded)
+            return;
+
+        _watcherCurrentChaseElapsed += Time.deltaTime;
+        if (_watcherCurrentChaseElapsed >= 30f)
+            SpawnWatcherBulwarksNow();
+    }
+
+    private void SpawnWatcherBulwarksNow()
+    {
+        if (_watcherBulwarksSpawnedThisChase || _archetype == null) return;
+        _archetype.SpawnWatcherBulwarksOnEnterChase(transform);
+        _watcherBulwarksSpawnedThisChase = true;
     }
 
     private bool PlayerIsDetected()
@@ -453,10 +508,8 @@ public class EnemyAI : MonoBehaviour
 
     private void RefreshVisionIdleSway()
     {
-        if (_archetype != null && _archetype.IdleVisionConeSway && _state == State.Idle)
-            _vision.SetIdleConeSway(true, _archetype.IdleSwayDegrees, _archetype.IdleSwaySpeed);
-        else
-            _vision.SetIdleConeSway(false);
+        // Idle scanning now turns the enemy body; cone-only sway is disabled.
+        _vision.SetIdleConeSway(false);
     }
 
     private static bool HasAnyClip(AudioClip[] clips)
@@ -528,7 +581,6 @@ public class EnemyAI : MonoBehaviour
 
     private bool ShouldFlashSuspiciousCone()
     {
-        return _state == State.Suspicious
-            || (_sprinterFlow && _state == State.SprinterSweep);
+        return _state == State.Suspicious;
     }
 }

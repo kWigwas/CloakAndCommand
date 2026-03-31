@@ -27,8 +27,25 @@ public class EnemyMovement : MonoBehaviour
     [Tooltip("Half-angle swept in each direction during on-spot scanning.")]
     [SerializeField] public float scanHalfAngle = 50f;
 
+    [Header("Idle look-around")]
+    [Tooltip("Half-angle swept in each direction while idling in place.")]
+    [SerializeField] private float idleLookHalfAngle = 10f;
+    [Tooltip("Degrees/sec for idle look sweep (use lower values for slower, human-like scanning).")]
+    [SerializeField] private float idleLookSweepSpeed = 18f;
+    [Tooltip("Seconds to hold gaze at each side before turning back.")]
+    [SerializeField] private float idleLookPauseAtEnds = 0.45f;
+
+    [Header("Local avoidance")]
+    [Tooltip("Helps prevent kinematic enemies from stacking on each other while moving.")]
+    [SerializeField] private bool enableSeparation = true;
+    [SerializeField] private float separationRadius = 0.7f;
+    [SerializeField] private float separationWeight = 1.35f;
+    [SerializeField] private LayerMask separationMask = ~0;
+
     // ── Private ──────────────────────────────────────────────────────────────
     private Rigidbody2D _body;
+    private Collider2D _selfCollider;
+    private readonly Collider2D[] _separationHits = new Collider2D[24];
 
     private Vector2 _sprinterStaleChaseTarget;
 
@@ -37,6 +54,11 @@ public class EnemyMovement : MonoBehaviour
     private float _scanBaseRotation;
     private float _scanOffset;
     private float _scanVelocity;
+    private bool _idleLookInitialized;
+    private float _idleLookBaseRotation;
+    private float _idleLookOffset;
+    private float _idleLookVelocity;
+    private float _idleLookPauseTimer;
 
     // ────────────────────────────────────────────────────────────────────────
     //  Unity lifecycle
@@ -46,6 +68,7 @@ public class EnemyMovement : MonoBehaviour
     {
         _body = GetComponent<Rigidbody2D>();
         _body.bodyType = RigidbodyType2D.Kinematic;
+        _selfCollider = GetComponent<Collider2D>();
     }
 
     // ────────────────────────────────────────────────────────────────────────
@@ -59,13 +82,13 @@ public class EnemyMovement : MonoBehaviour
     /// <summary>Rotate and move toward the player at full chase speed.</summary>
     public void ChasePlayer(Vector2 targetPosition)
     {
-        RotateTowards(targetPosition, chaseTurnSpeed);
-
         Vector2 to = targetPosition - _body.position;
         float dist = to.magnitude;
         if (dist <= chaseStopDistance) return;
-
-        _body.MovePosition(_body.position + (to / dist) * (chaseSpeed * Time.fixedDeltaTime));
+        Vector2 dir = to / dist;
+        dir = ApplySeparation(dir);
+        RotateTowardsDirection(dir, chaseTurnSpeed);
+        _body.MovePosition(_body.position + dir * (chaseSpeed * Time.fixedDeltaTime));
     }
 
     /// <summary>Planar move + turn (deploy / leave paths).</summary>
@@ -74,11 +97,10 @@ public class EnemyMovement : MonoBehaviour
         Vector2 to = worldTarget - _body.position;
         float dist = to.magnitude;
         if (dist < 0.0001f) return;
-        to /= dist;
-        float targetDeg = Mathf.Atan2(-to.x, to.y) * Mathf.Rad2Deg;
-        _body.MoveRotation(Mathf.MoveTowardsAngle(
-            _body.rotation, targetDeg, turnSpeedDegreesPerSec * Time.fixedDeltaTime));
-        _body.MovePosition(_body.position + to * (moveSpeed * Time.fixedDeltaTime));
+        Vector2 dir = to / dist;
+        dir = ApplySeparation(dir);
+        RotateTowardsDirection(dir, turnSpeedDegreesPerSec);
+        _body.MovePosition(_body.position + dir * (moveSpeed * Time.fixedDeltaTime));
     }
 
     /// <summary>Call when entering chase so stale target starts at the player.</summary>
@@ -125,9 +147,8 @@ public class EnemyMovement : MonoBehaviour
             else
             {
                 Vector2 dir = toTarget / dist;
-                float targetDeg = Mathf.Atan2(-dir.x, dir.y) * Mathf.Rad2Deg;
-                _body.MoveRotation(Mathf.MoveTowardsAngle(
-                    _body.rotation, targetDeg, suspiciousTurnSpeed * Time.fixedDeltaTime));
+                dir = ApplySeparation(dir);
+                RotateTowardsDirection(dir, suspiciousTurnSpeed);
                 _body.MovePosition(_body.position +
                     dir * (chaseSpeed * searchSpeedMultiplier * Time.fixedDeltaTime));
             }
@@ -153,6 +174,49 @@ public class EnemyMovement : MonoBehaviour
         return true; // is scanning
     }
 
+    /// <summary>Called on entering Idle to start a gentle deterministic look sweep.</summary>
+    public void BeginIdleLookAround(float halfAngleDeg = 10f, float sweepSpeed = 18f, float pauseAtEnds = 0.45f)
+    {
+        idleLookHalfAngle = Mathf.Max(0f, halfAngleDeg);
+        idleLookSweepSpeed = Mathf.Max(1f, sweepSpeed);
+        idleLookPauseAtEnds = Mathf.Max(0f, pauseAtEnds);
+        _idleLookBaseRotation = _body.rotation;
+        _idleLookOffset = 0f;
+        _idleLookVelocity = idleLookSweepSpeed;
+        _idleLookPauseTimer = 0f;
+        _idleLookInitialized = true;
+    }
+
+    /// <summary>Search-like idle scanning, deterministic and slower.</summary>
+    public void IdleLookAround(float dt)
+    {
+        if (!_idleLookInitialized)
+            BeginIdleLookAround(idleLookHalfAngle, idleLookSweepSpeed, idleLookPauseAtEnds);
+
+        if (_idleLookPauseTimer > 0f)
+        {
+            _idleLookPauseTimer -= dt;
+            return;
+        }
+
+        _idleLookOffset += _idleLookVelocity * dt;
+
+        if (_idleLookOffset >= idleLookHalfAngle)
+        {
+            _idleLookOffset = idleLookHalfAngle;
+            _idleLookVelocity = -idleLookSweepSpeed;
+            _idleLookPauseTimer = idleLookPauseAtEnds;
+        }
+        else if (_idleLookOffset <= -idleLookHalfAngle)
+        {
+            _idleLookOffset = -idleLookHalfAngle;
+            _idleLookVelocity = idleLookSweepSpeed;
+            _idleLookPauseTimer = idleLookPauseAtEnds;
+        }
+
+        _body.MoveRotation(_idleLookBaseRotation + _idleLookOffset);
+    }
+
     // ────────────────────────────────────────────────────────────────────────
     //  Internal helpers
     // ────────────────────────────────────────────────────────────────────────
@@ -162,9 +226,50 @@ public class EnemyMovement : MonoBehaviour
         Vector2 to = targetPosition - _body.position;
         if (to.sqrMagnitude < 0.0001f) return;
 
-        to.Normalize();
-        float targetDeg = Mathf.Atan2(-to.x, to.y) * Mathf.Rad2Deg;
+        RotateTowardsDirection(to.normalized, degreesPerSecond);
+    }
+
+    private void RotateTowardsDirection(Vector2 dir, float degreesPerSecond)
+    {
+        if (dir.sqrMagnitude < 0.0001f) return;
+        float targetDeg = Mathf.Atan2(-dir.x, dir.y) * Mathf.Rad2Deg;
         _body.MoveRotation(Mathf.MoveTowardsAngle(
             _body.rotation, targetDeg, degreesPerSecond * Time.fixedDeltaTime));
+    }
+
+    private Vector2 ApplySeparation(Vector2 desiredDir)
+    {
+        if (!enableSeparation || desiredDir.sqrMagnitude < 1e-6f)
+            return desiredDir;
+
+        float radius = Mathf.Max(0.05f, separationRadius);
+        int count = Physics2D.OverlapCircleNonAlloc(_body.position, radius, _separationHits, separationMask);
+        if (count <= 0)
+            return desiredDir;
+
+        Vector2 away = Vector2.zero;
+        for (int i = 0; i < count; i++)
+        {
+            var col = _separationHits[i];
+            if (col == null) continue;
+            if (_selfCollider != null && col == _selfCollider) continue;
+
+            var rb = col.attachedRigidbody;
+            if (rb == null || rb == _body) continue;
+
+            Vector2 nearest = col.ClosestPoint(_body.position);
+            Vector2 toOther = nearest - _body.position;
+            float d = toOther.magnitude;
+            if (d < 0.0001f) continue;
+
+            float w = 1f - Mathf.Clamp01(d / radius);
+            away -= (toOther / d) * w;
+        }
+
+        if (away.sqrMagnitude < 1e-6f)
+            return desiredDir;
+
+        Vector2 combined = desiredDir + away * Mathf.Max(0f, separationWeight);
+        return combined.sqrMagnitude > 1e-6f ? combined.normalized : desiredDir;
     }
 }

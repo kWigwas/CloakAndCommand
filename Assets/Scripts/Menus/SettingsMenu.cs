@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 /// <summary>
 /// Wire UI controls here (sliders, toggles, dropdown). Optionally assign an AudioMixer;
@@ -33,17 +34,78 @@ public class SettingsMenu : MonoBehaviour
     {
         GameSettings.EnsureLoaded();
         TryBindSlidersFromHierarchy();
-        WireToggleHandlers();
+        WireUiHandlers();
         RefreshUIFromSettings();
     }
 
     private void OnDisable()
     {
-        UnwireToggleHandlers();
+        SaveFromCurrentUiState();
+        UnwireUiHandlers();
     }
 
-    private void WireToggleHandlers()
+    private static float SliderToNormalized(Slider s, float rawValue)
     {
+        if (s == null)
+        {
+            // Fallback for missing references: many UIs use 0..100 sliders.
+            if (rawValue > 1f)
+                return Mathf.Clamp01(rawValue / 100f);
+            return Mathf.Clamp01(rawValue);
+        }
+        float min = s.minValue;
+        float max = s.maxValue;
+        if (max - min < 0.0001f) return 1f;
+        return Mathf.Clamp01((rawValue - min) / (max - min));
+    }
+
+    private static float NormalizedToSlider(Slider s, float normalized)
+    {
+        normalized = Mathf.Clamp01(normalized);
+        if (s == null) return normalized;
+        float min = s.minValue;
+        float max = s.maxValue;
+        return Mathf.Lerp(min, max, normalized);
+    }
+
+    private void SaveFromCurrentUiState()
+    {
+        // Persist even if UI events were not wired in Inspector/runtime for some reason.
+        if (masterSlider != null)
+            GameSettings.SetMasterVolume(SliderToNormalized(masterSlider, masterSlider.value));
+        if (musicSlider != null)
+            GameSettings.SetMusicVolume(SliderToNormalized(musicSlider, musicSlider.value));
+        if (sfxSlider != null)
+            GameSettings.SetSfxVolume(SliderToNormalized(sfxSlider, sfxSlider.value));
+        if (fullscreenToggle != null)
+            GameSettings.SetFullscreen(fullscreenToggle.isOn);
+        if (vsyncToggle != null)
+            GameSettings.SetVsync(vsyncToggle.isOn);
+        if (qualityDropdown != null)
+            GameSettings.SetQualityLevel(qualityDropdown.value);
+
+        GameSettings.ApplyDisplay();
+        GameSettings.ApplyAudio(audioMixer, masterMixerParameter, musicMixerParameter, sfxMixerParameter);
+        GameSettings.Save();
+    }
+
+    private void WireUiHandlers()
+    {
+        if (masterSlider != null)
+        {
+            masterSlider.onValueChanged.RemoveListener(OnMasterVolumeChanged);
+            masterSlider.onValueChanged.AddListener(OnMasterVolumeChanged);
+        }
+        if (musicSlider != null)
+        {
+            musicSlider.onValueChanged.RemoveListener(OnMusicVolumeChanged);
+            musicSlider.onValueChanged.AddListener(OnMusicVolumeChanged);
+        }
+        if (sfxSlider != null)
+        {
+            sfxSlider.onValueChanged.RemoveListener(OnSfxVolumeChanged);
+            sfxSlider.onValueChanged.AddListener(OnSfxVolumeChanged);
+        }
         if (fullscreenToggle != null)
         {
             fullscreenToggle.onValueChanged.RemoveListener(OnFullscreenChanged);
@@ -54,36 +116,69 @@ public class SettingsMenu : MonoBehaviour
             vsyncToggle.onValueChanged.RemoveListener(OnVsyncChanged);
             vsyncToggle.onValueChanged.AddListener(OnVsyncChanged);
         }
+        if (qualityDropdown != null)
+        {
+            qualityDropdown.onValueChanged.RemoveListener(OnQualityChanged);
+            qualityDropdown.onValueChanged.AddListener(OnQualityChanged);
+        }
     }
 
-    private void UnwireToggleHandlers()
+    private void UnwireUiHandlers()
     {
+        if (masterSlider != null)
+            masterSlider.onValueChanged.RemoveListener(OnMasterVolumeChanged);
+        if (musicSlider != null)
+            musicSlider.onValueChanged.RemoveListener(OnMusicVolumeChanged);
+        if (sfxSlider != null)
+            sfxSlider.onValueChanged.RemoveListener(OnSfxVolumeChanged);
         if (fullscreenToggle != null)
             fullscreenToggle.onValueChanged.RemoveListener(OnFullscreenChanged);
         if (vsyncToggle != null)
             vsyncToggle.onValueChanged.RemoveListener(OnVsyncChanged);
+        if (qualityDropdown != null)
+            qualityDropdown.onValueChanged.RemoveListener(OnQualityChanged);
     }
 
     /// <summary>Bind sliders by name when references are missing (SettingsManager is not parented under the canvas).</summary>
     private void TryBindSlidersFromHierarchy()
     {
-        if (masterSlider != null && musicSlider != null && sfxSlider != null)
-            return;
+        masterSlider = FindBestNamedSlider("MasterSlider", masterSlider);
+        musicSlider = FindBestNamedSlider("MusicSlider", musicSlider);
+        sfxSlider = FindBestNamedSlider("SFXSlider", sfxSlider);
+    }
+
+    private static Slider FindBestNamedSlider(string name, Slider fallback)
+    {
+        List<Slider> candidates = new List<Slider>(8);
         foreach (var s in FindObjectsByType<Slider>(FindObjectsInactive.Include, FindObjectsSortMode.None))
         {
-            switch (s.gameObject.name)
+            if (s != null && s.gameObject.name == name)
+                candidates.Add(s);
+        }
+
+        if (candidates.Count == 0)
+            return fallback;
+        if (candidates.Count == 1)
+            return candidates[0];
+
+        // Prefer the currently active slider under a Canvas (visible UI), then preserve fallback.
+        Slider best = null;
+        int bestScore = int.MinValue;
+        foreach (var s in candidates)
+        {
+            int score = 0;
+            if (s.gameObject.activeInHierarchy) score += 100;
+            if (s.enabled) score += 50;
+            if (s.GetComponentInParent<Canvas>() != null) score += 25;
+            if (fallback != null && s == fallback) score += 10;
+            if (score > bestScore)
             {
-                case "MasterSlider":
-                    if (masterSlider == null) masterSlider = s;
-                    break;
-                case "MusicSlider":
-                    if (musicSlider == null) musicSlider = s;
-                    break;
-                case "SFXSlider":
-                    if (sfxSlider == null) sfxSlider = s;
-                    break;
+                best = s;
+                bestScore = score;
             }
         }
+
+        return best ?? fallback;
     }
 
     public void RefreshUIFromSettings()
@@ -91,11 +186,11 @@ public class SettingsMenu : MonoBehaviour
         GameSettings.EnsureLoaded();
 
         if (masterSlider != null)
-            masterSlider.SetValueWithoutNotify(GameSettings.MasterVolume);
+            masterSlider.SetValueWithoutNotify(NormalizedToSlider(masterSlider, GameSettings.MasterVolume));
         if (musicSlider != null)
-            musicSlider.SetValueWithoutNotify(GameSettings.MusicVolume);
+            musicSlider.SetValueWithoutNotify(NormalizedToSlider(musicSlider, GameSettings.MusicVolume));
         if (sfxSlider != null)
-            sfxSlider.SetValueWithoutNotify(GameSettings.SfxVolume);
+            sfxSlider.SetValueWithoutNotify(NormalizedToSlider(sfxSlider, GameSettings.SfxVolume));
         if (fullscreenToggle != null)
             fullscreenToggle.SetIsOnWithoutNotify(GameSettings.Fullscreen);
         if (vsyncToggle != null)
@@ -115,19 +210,19 @@ public class SettingsMenu : MonoBehaviour
 
     public void OnMasterVolumeChanged(float value)
     {
-        GameSettings.SetMasterVolume(value);
+        GameSettings.SetMasterVolume(SliderToNormalized(masterSlider, value));
         GameSettings.ApplyAudio(audioMixer, masterMixerParameter, musicMixerParameter, sfxMixerParameter);
     }
 
     public void OnMusicVolumeChanged(float value)
     {
-        GameSettings.SetMusicVolume(value);
+        GameSettings.SetMusicVolume(SliderToNormalized(musicSlider, value));
         GameSettings.ApplyAudio(audioMixer, masterMixerParameter, musicMixerParameter, sfxMixerParameter);
     }
 
     public void OnSfxVolumeChanged(float value)
     {
-        GameSettings.SetSfxVolume(value);
+        GameSettings.SetSfxVolume(SliderToNormalized(sfxSlider, value));
         GameSettings.ApplyAudio(audioMixer, masterMixerParameter, musicMixerParameter, sfxMixerParameter);
     }
 

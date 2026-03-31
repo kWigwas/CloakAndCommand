@@ -7,9 +7,7 @@
 
   Editor loads via Assets/Art. Player builds need Resources (same logical path) or Addressables.
 -->
-
-## Single Spagetty Studios
-
+## Single Spagetty Games
 presents
 
 
@@ -18,6 +16,7 @@ presents
 
 
 ![GameLogo](Art/Logo)
+<!-- Attack of the Radioactive Things -->
 
 
 
@@ -27,28 +26,29 @@ presents
 
 
 
+
+
+
+
+
+
+
+
+
+## CREDITS
 
 
 
 ### MANAGEMENT
 
 
-
-#### Project Manager
-
-Hari Vallath
-
 #### Team Members
-
 Kego Wigwas
-
 Hari Vallath
-
 Mishaal Patel
 
-#### Pizza Order Lead
-
-Dr. Abedalrhman Alkhateeb
+#### Project Manager
+Hari Vallath
 
 
 
@@ -58,31 +58,25 @@ Dr. Abedalrhman Alkhateeb
 ## NARRATIVE
 
 
-
 #### Narrative Director
-
 Mishaal Patel
 
-#### Casting Director
-
+#### Casting by
 Hari Vallath
-
-
-
 
 
 
 ### CAST
 
-Radioactive Watcher – Talha Hasan
+Watcher – TBD
 
-Radioactive Sprinter – Nicholas Roy
+Sprinter – Nicholas Roy
 
-Radioactive Bulwark – TBD
+Bulwark – TBD
 
-Soldier Scout – Kego Wigwas
+Soldier Scout – Talha Hasan
 
-Soldier Commander – TBD
+Soldier Commander – Kego Wigwas
 <!-- Fix cast names -->
 
 
@@ -95,33 +89,25 @@ Soldier Commander – TBD
 
 
 #### Gameplay Programmer – Stealth
-
 Hari Vallath
 
 #### Gameplay Programmers – Tower-Defense
-
 Kego Wigwas
-
 Mishaal Patel
 
-#### AI Programmer
-
+#### Enemy AI Programmer
 Hari Vallath
 
 #### Pathfinding Programmer
-
 Kego Wigwas
 
 #### Turret Designer
-
 Mishaal Patel
 
 #### Save Data Manager
-
 Hari Vallath
 
 #### UI Programmer
-
 Hari Vallath
 
 
@@ -134,15 +120,12 @@ Hari Vallath
 
 
 #### Systems Designer
-
 Hari Vallath
 
 #### Level Designer
-
 Kego Wigwas
 
 #### UI Designer
-
 Hari Vallath
 
 
@@ -153,33 +136,24 @@ Hari Vallath
 ### ART DESIGN
 
 
-
 #### Creative Director
-
 Hari Vallath
 
 #### Character Artist
-
 Ausat Ali
 
-#### Environment Artist
-
+#### Environment Design
 TBD
 
 #### Concept Artists
-
 Hari Vallath
-
 Kego Wigwas
 
 #### Animation
-
 Kego Wigwas
-
 Hari Vallath
 
 #### Additional Art
-
 Mona Lisa – Leonardo Da Vinci
 <!-- Add art asset names -->
 
@@ -191,9 +165,7 @@ Mona Lisa – Leonardo Da Vinci
 ### SOUND DESIGN
 
 
-
 #### Audio Director
-
 Hari Vallath
 
 #### Music
@@ -213,15 +185,16 @@ Death Enemy 2 (from Left: Aliened) – Kego Wigwas
 
 
 
-### QUALITY ASSURANCE
+## QUALITY ASSURANCE
 
 
 
 #### QA Analyst
-
 Hari Vallath
-
 Mishaal Patel
+
+#### Pizza Manager
+Dr. Abedalrhman Alkhateeb
 
 
 
@@ -232,15 +205,14 @@ Mishaal Patel
 
 
 
-### TOOLS
+## TOOLS
 
 
 
 #### Technology Stack
-
 Game Engine – Unity
-
 IDE – Visual Studio 2022
+Audio Editing – Audacity
 
 
 
@@ -250,11 +222,8 @@ IDE – Visual Studio 2022
 Created for
 
 ##### Lakehead University
-
 COMP-4432 Advanced Game Programming Project / COMP-4431 Advanced Project
-
 Dr. Abedalrhman Alkhateeb
-
 April, 2026
 
 

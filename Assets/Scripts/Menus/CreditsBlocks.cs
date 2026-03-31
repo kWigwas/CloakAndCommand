@@ -51,15 +51,26 @@ public static class CreditsBlocks
         var template = styleSource != null ? styleSource : root.GetComponentInChildren<TMP_Text>();
         string raw = CreditsMarkdown.StripHtmlComments(markdown.text ?? string.Empty);
         var pieces = SplitPieces(raw);
-        foreach (var p in pieces)
+        for (int i = 0; i < pieces.Count; i++)
         {
+            var p = pieces[i];
             if (p.kind == Kind.Text)
             {
                 if (string.IsNullOrWhiteSpace(p.richText)) continue;
                 AddTextBlock(root, p.richText, template);
             }
             else
+            {
+                // TMP often drops trailing blank lines at end of a text block's preferred height.
+                // Add explicit spacer rows before image blocks to preserve Markdown blank-line gaps.
+                if (i > 0 && pieces[i - 1].kind == Kind.Text)
+                {
+                    int blankLines = CountTrailingBlankLines(pieces[i - 1].richText);
+                    if (blankLines > 0)
+                        AddSpacerBlock(root, template, blankLines);
+                }
                 AddImageBlock(root, p.richText, p.imageWidth, p.imageHeight, template, editorArtFolderPath);
+            }
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(root);
@@ -115,7 +126,50 @@ public static class CreditsBlocks
         var s = sb.ToString();
         sb.Clear();
         if (string.IsNullOrWhiteSpace(s)) return;
-        list.Add(new Piece { kind = Kind.Text, richText = s.TrimEnd() });
+        // Preserve intentional blank lines before/after image blocks from Markdown.
+        list.Add(new Piece { kind = Kind.Text, richText = s });
+    }
+
+    static int CountTrailingBlankLines(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return 0;
+        int lines = 0;
+        int i = text.Length - 1;
+        while (i >= 0)
+        {
+            while (i >= 0 && text[i] == '\r') i--;
+            if (i < 0 || text[i] != '\n') break;
+            i--;
+            int end = i;
+            while (i >= 0 && text[i] != '\n') i--;
+            bool isBlank = true;
+            for (int k = i + 1; k <= end; k++)
+            {
+                if (!char.IsWhiteSpace(text[k]))
+                {
+                    isBlank = false;
+                    break;
+                }
+            }
+            if (!isBlank) break;
+            lines++;
+        }
+        return lines;
+    }
+
+    static void AddSpacerBlock(RectTransform parent, TMP_Text template, int blankLineCount)
+    {
+        if (blankLineCount <= 0) return;
+        float line = template != null
+            ? Mathf.Max(8f, template.fontSize + template.lineSpacing + 2f)
+            : 28f;
+
+        var go = new GameObject("CreditsSpacer", typeof(RectTransform));
+        var rt = go.GetComponent<RectTransform>();
+        rt.SetParent(parent, false);
+        var le = go.AddComponent<LayoutElement>();
+        le.preferredHeight = line * blankLineCount;
+        le.flexibleWidth = 1f;
     }
 
     /// <summary>First <c>|</c> separates asset path from optional size: <c>480</c> or <c>480x200</c>.</summary>

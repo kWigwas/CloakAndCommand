@@ -43,6 +43,9 @@ public class EnemyArchetype : MonoBehaviour
     [SerializeField] [Min(1)] private int sprinterReinforceMaxCount = 3;
     [SerializeField] private float sprinterApproachRingMin = 1.1f;
     [SerializeField] private float sprinterApproachRingMax = 3.8f;
+    [Tooltip("Summoned sprinters spawn around the detected player within this radius band (prefer off-screen).")]
+    [SerializeField] private float sprinterSpawnNearPlayerMinRadius = 7f;
+    [SerializeField] private float sprinterSpawnNearPlayerMaxRadius = 14f;
     [SerializeField] private float sprinterSweepOrbitRadius = 2.6f;
     [Tooltip("Extra world units beyond camera ortho bounds for spawn / despawn.")]
     [SerializeField] private float offscreenMarginWorld = 1.15f;
@@ -103,8 +106,19 @@ public class EnemyArchetype : MonoBehaviour
         int n = Random.Range(minC, maxC + 1);
         for (int i = 0; i < n; i++)
         {
-            Vector2 spawn = OffScreenSpawn2D.RandomBeyondView(cam, offscreenMarginWorld);
-            var go = Object.Instantiate(sprinterPrefab, spawn, Quaternion.identity);
+            Vector2 spawn = OffScreenSpawn2D.RandomNearPointOutsideView(
+                investigationCenter,
+                cam,
+                sprinterSpawnNearPlayerMinRadius,
+                sprinterSpawnNearPlayerMaxRadius,
+                offscreenMarginWorld);
+            var spawned = Object.Instantiate((Object)sprinterPrefab, (Vector3)spawn, Quaternion.identity);
+            var go = spawned as GameObject;
+            if (go == null)
+            {
+                Debug.LogError($"{nameof(EnemyArchetype)}: sprinter prefab did not instantiate as GameObject.", this);
+                continue;
+            }
             var dep = go.AddComponent<EnemySprinterDeployment>();
             dep.Setup(
                 investigationCenter,
@@ -124,7 +138,13 @@ public class EnemyArchetype : MonoBehaviour
             float ang = (i / (float)count) * Mathf.PI * 2f + Random.Range(-0.12f, 0.12f);
             float rad = radius * Random.Range(0.75f, 1.05f);
             Vector2 offset = new Vector2(Mathf.Cos(ang), Mathf.Sin(ang)) * rad;
-            var go = Object.Instantiate(prefab, center + offset, Quaternion.identity);
+            var spawned = Object.Instantiate((Object)prefab, (Vector3)(center + offset), Quaternion.identity);
+            var go = spawned as GameObject;
+            if (go == null)
+            {
+                Debug.LogError($"{nameof(EnemyArchetype)}: ring prefab did not instantiate as GameObject.");
+                continue;
+            }
             go.GetComponent<EnemyArchetype>()?.WakeFromWatcherSummon();
         }
     }

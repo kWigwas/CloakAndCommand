@@ -13,20 +13,20 @@ PrefabInstance:
       value: EnemyWatcher Variant
       objectReference: {fileID: 0}
     - target: {fileID: 3602747758012533136, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
-      propertyPath: sprinterPrefab
-      value: 
-      objectReference: {fileID: 100100000, guid: 7e76a14837534604c83b37fa8390cd4a, type: 3}
-    - target: {fileID: 3602747758012533136, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
       propertyPath: bulwarkPrefab
       value: 
-      objectReference: {fileID: 100100000, guid: 3a1e4d5a37a12464cb6f9d8f50f51235, type: 3}
+      objectReference: {fileID: 8498735126217684919, guid: 3a1e4d5a37a12464cb6f9d8f50f51235, type: 3}
+    - target: {fileID: 3602747758012533136, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
+      propertyPath: sprinterPrefab
+      value: 
+      objectReference: {fileID: 5323369210551820999, guid: 7e76a14837534604c83b37fa8390cd4a, type: 3}
     - target: {fileID: 3602747758012533136, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
       propertyPath: bulwarksOnEnterChase
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3602747758012533136, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
       propertyPath: sprinterReinforceMaxCount
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3602747758012533136, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
       propertyPath: sprinterSweepAngularSpeed
@@ -46,7 +46,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3602747758012533136, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
       propertyPath: sprinterReinforceChanceAfterFirstCycle
-      value: 0.489
+      value: 0.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 5807021076996757932, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5807021076996757932, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5807021076996757932, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7347064281203132606, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
       propertyPath: chaseSpeed

@@ -21,6 +21,10 @@ public class EnemyPatrol : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float speed = 1f;
     [SerializeField] private float reachDistance = 0.05f;
+    [SerializeField] private bool enableSeparation = true;
+    [SerializeField] private float separationRadius = 0.7f;
+    [SerializeField] private float separationWeight = 1.1f;
+    [SerializeField] private LayerMask separationMask = ~0;
 
     [Header("Health")]
     [SerializeField] private float health = 10f;
@@ -37,6 +41,8 @@ public class EnemyPatrol : MonoBehaviour
     private int currWaypointIndex;
     private float finalDist;
     private int inspectIndex;
+    private Collider2D _selfCollider;
+    private readonly Collider2D[] _separationHits = new Collider2D[24];
 
     public EnemyPathing PatrolPath => patrolPath;
     public int CurrentWaypointIndex => currWaypointIndex;
@@ -44,6 +50,7 @@ public class EnemyPatrol : MonoBehaviour
     private void Awake()
     {
         myBody = GetComponent<Rigidbody2D>();
+        _selfCollider = GetComponent<Collider2D>();
         ResolvePatrolPath();
         ResetWaypointToPatrolStart();
 
@@ -109,6 +116,7 @@ public class EnemyPatrol : MonoBehaviour
 
         Vector3 targetPos = wp.position;
         Vector3 direction = (targetPos - transform.position).normalized;
+        direction = ApplySeparation(direction);
         Vector3 movePosition = transform.position + speed * Time.deltaTime * direction;
         myBody.MovePosition(movePosition);
 
@@ -148,6 +156,42 @@ public class EnemyPatrol : MonoBehaviour
         }
 
         return finalDist;
+    }
+
+    private Vector2 ApplySeparation(Vector2 desiredDir)
+    {
+        if (!enableSeparation || desiredDir.sqrMagnitude < 1e-6f)
+            return desiredDir;
+
+        float radius = Mathf.Max(0.05f, separationRadius);
+        int count = Physics2D.OverlapCircleNonAlloc(myBody.position, radius, _separationHits, separationMask);
+        if (count <= 0)
+            return desiredDir;
+
+        Vector2 away = Vector2.zero;
+        for (int i = 0; i < count; i++)
+        {
+            var col = _separationHits[i];
+            if (col == null) continue;
+            if (_selfCollider != null && col == _selfCollider) continue;
+
+            var rb = col.attachedRigidbody;
+            if (rb == null || rb == myBody) continue;
+
+            Vector2 nearest = col.ClosestPoint(myBody.position);
+            Vector2 toOther = nearest - myBody.position;
+            float d = toOther.magnitude;
+            if (d < 0.0001f) continue;
+
+            float w = 1f - Mathf.Clamp01(d / radius);
+            away -= (toOther / d) * w;
+        }
+
+        if (away.sqrMagnitude < 1e-6f)
+            return desiredDir;
+
+        Vector2 combined = desiredDir + away * Mathf.Max(0f, separationWeight);
+        return combined.sqrMagnitude > 1e-6f ? combined.normalized : desiredDir;
     }
 
     private void OnDrawGizmos()
