@@ -78,7 +78,7 @@ public class Turret : MonoBehaviour
         }
         else
         {
-            EnemyPatrol targetScript = target.GetComponent<EnemyPatrol>();
+            TDEnemyProperties targetScript = target.GetComponent<TDEnemyProperties>();
             targetScript.TakeDamage(damage);
         }
     }
@@ -93,13 +93,13 @@ public class Turret : MonoBehaviour
         if (hits.Length > 0)
         {
             target = hits[0].collider.gameObject;
-            EnemyPatrol targetScript = target.GetComponent<EnemyPatrol>();
-            EnemyPatrol comparisonScript;
+            TDEnemyProperties targetScript = target.GetComponent<TDEnemyProperties>();
+            TDEnemyProperties comparisonScript;
 
             for (int i = 1; i < hits.Length; i++)
             {
-                comparisonScript = hits[i].collider.gameObject.GetComponent<EnemyPatrol>();
-                if (comparisonScript.GetPathDist() > targetScript.GetPathDist())
+                comparisonScript = hits[i].collider.gameObject.GetComponent<TDEnemyProperties>();
+                if (comparisonScript.GetPathDist() < targetScript.GetPathDist())
                 {
                     target = hits[i].collider.gameObject;
                     targetScript = comparisonScript;

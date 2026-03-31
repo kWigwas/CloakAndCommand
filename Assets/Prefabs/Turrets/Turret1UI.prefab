@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a37f65b37713540a3f65a912519ce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Drag_and_Drop
-  turretPrefab: {fileID: 1214845203001742084, guid: 10973c403c6fcf548adc5d676bedae69, type: 3}
+  turretPrefab: {fileID: 1214845203001742084, guid: 9e6a14efa83b53243963b7f967ec0068, type: 3}
 --- !u!58 &7836840730908945116
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -136,7 +136,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0

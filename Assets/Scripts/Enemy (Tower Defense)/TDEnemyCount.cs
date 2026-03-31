@@ -1,0 +1,54 @@
+using System.Collections;
+using UnityEngine;
+
+public class TDEnemyCount : MonoBehaviour
+{
+    //Set to static Instance so that scripts referencing these variables don't need to create a local script variable
+    //Must include gameObject in scene with this script attachted; No clue if loading scenes breaks this counter
+    public static TDEnemyCount Instance { get; set; }
+
+    private int eCount = 0; //Tracks current # of enemies
+    private int eSpawned = 0; //Tracks how many spawned
+    private int eTotal = 0; //Tracks how many will spawn
+    private int eDefeat = 0; //Tracks how many were defeated
+
+    private void Awake()
+    {
+        //Simpleton stuff
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
+        //DontDestroyOnLoad(gameObject); //Allows for objects to persist between scenes
+    }
+
+    public void IncrementCount() {  eCount++; }
+    public void DecrementCount() { eCount--; }
+    public void IncrementSpawnCount() {  eSpawned++; }
+    public void IncrementDefeat() { eDefeat++; }
+    public void SetTotal(int total) { eTotal = total; }
+    public int GetCount() { return eCount; }
+    public int GetDefeatCount() { return eDefeat; }
+
+    //Update used to track TD end level conditions
+    public void Update()
+    {
+        //All enemies defeated
+        if (eDefeat == eTotal)
+        {
+            Debug.Log("All enemies cleared");
+            //Trigger victory condition here
+            Debug.Break(); //COMMENT THIS OUT IN FINAL RELEASE
+        }
+        //All enemies spawned but NOT all defeated
+        if(eCount == 0 && eSpawned == eTotal)
+        {
+            Debug.Log("All enemies managed");
+            //Debug.Break();
+        }
+    }
+}
