@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8181736232620070686}
-  - component: {fileID: 6541787273472434233}
+  - component: {fileID: 8423837224215198128}
   m_Layer: 0
   m_Name: EnemySpawner
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6541787273472434233
+--- !u!114 &8423837224215198128
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,12 +41,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7625024957589993764}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 026a1ef4873592e46bdfa3f3e2aa1c95, type: 3}
+  m_Script: {fileID: 11500000, guid: 0388f10e21862ee4594d1c0fdd4e33a1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ESpawnManager
-  Enemy: {fileID: 2914864212932273066, guid: 8c24dc24015bbae47ad21190ea12838e, type: 3}
-  spawnPts:
-  - {fileID: 0}
-  spawnDelay: 2
-  spawnLimit: 2
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnManager
+  Enemy: {fileID: 2293404932660952980, guid: 31e92afc046f7c641b54e6ded2047f41, type: 3}
+  spawnPts: []
+  initDelay: 5
+  spawnDelay: 5
+  spawnLimit: 0
+  toggleCount: 0
+  functionDelaySeconds: 1
   stopSpawn: 0

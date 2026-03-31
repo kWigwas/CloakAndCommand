@@ -31,7 +31,7 @@ public class UIElement : MonoBehaviour
 
     private void OnMouseUp()
     {
-        Collider2D hitcollider = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("TowerBase"));
+        Collider2D hitcollider = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("TurretBase"));
         if (hitcollider != null && hitcollider.CompareTag("Placeable"))
         {
             hitcollider.gameObject.tag = "Occupied";

@@ -102,8 +102,8 @@ public class EnemyPathing : MonoBehaviour
 
         Cell startCell = cells[startPos];
         startCell.gCost = 0;
-        startCell.hCost = GetDistance(startPos, endPos);
-        startCell.fCost = GetDistance(startPos, endPos);
+        startCell.hCost = GetDist(startPos, endPos);
+        startCell.fCost = GetDist(startPos, endPos);
 
         while (cellsToSearch.Count > 0)
         {
@@ -176,7 +176,7 @@ public class EnemyPathing : MonoBehaviour
                 Vector2 neighborPos = new(x, y);
                 if (cells.TryGetValue(neighborPos, out Cell c) && !searchedCells.Contains(neighborPos) && !cells[neighborPos].isWall)
                 {
-                    int GcostToNeighbor = cells[cellPos].gCost + GetDistance(cellPos, neighborPos);
+                    int GcostToNeighbor = cells[cellPos].gCost + GetDist(cellPos, neighborPos);
 
                     if (GcostToNeighbor < cells[neighborPos].gCost)
                     {
@@ -184,7 +184,7 @@ public class EnemyPathing : MonoBehaviour
 
                         neighborNode.connection = cellPos;
                         neighborNode.gCost = GcostToNeighbor;
-                        neighborNode.hCost = GetDistance(neighborPos, endPos);
+                        neighborNode.hCost = GetDist(neighborPos, endPos);
                         neighborNode.fCost = neighborNode.gCost + neighborNode.hCost;
 
                         if (!cellsToSearch.Contains(neighborPos))
@@ -197,7 +197,7 @@ public class EnemyPathing : MonoBehaviour
         }
     }
 
-    private int GetDistance(Vector2 pos1, Vector2 pos2)
+    private int GetDist(Vector2 pos1, Vector2 pos2)
     {
         Vector2Int dist = new(Mathf.Abs((int)pos1.x - (int)pos2.x), Mathf.Abs((int)pos1.y - (int)pos2.y));
 

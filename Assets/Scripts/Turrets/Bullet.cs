@@ -30,7 +30,7 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        EnemyPatrol objectHitScript = other.gameObject.GetComponent<EnemyPatrol>();
+        TDEnemyProperties objectHitScript = other.gameObject.GetComponent<TDEnemyProperties>();
         objectHitScript.TakeDamage(bulletDamage);
         Destroy(gameObject);
     }

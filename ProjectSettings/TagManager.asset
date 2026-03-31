@@ -9,11 +9,12 @@ TagManager:
   - Tower
   - Placeable
   - Occupied
+  - Wall
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - TurretBase
   - Water
   - UI
   - Base/Floor
