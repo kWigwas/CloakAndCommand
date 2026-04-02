@@ -7,6 +7,12 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D myBody;
     private SpriteRenderer sr;
 
+    [Header("Minimap Rotation")]
+    [SerializeField] private bool forceMinimapToMatchMainCameraRotation = true;
+
+    Transform _minimapCameraTransform;
+    Transform _mainCameraTransform;
+
     [Header("Basic Movement")]
     [SerializeField]
     private float moveForce = 6f;
@@ -55,7 +61,13 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        var mainCam = Camera.main;
+        if (mainCam != null)
+            _mainCameraTransform = mainCam.transform;
 
+        var minimap = GameObject.Find("MinimapCamera");
+        if (minimap != null)
+            _minimapCameraTransform = minimap.transform;
     }
 
     void Update()
@@ -101,6 +113,15 @@ public class PlayerMovement : MonoBehaviour
             rollCooldownTimer -= Time.unscaledDeltaTime;
     }
 
+    void LateUpdate()
+    {
+        if (forceMinimapToMatchMainCameraRotation && _minimapCameraTransform != null && _mainCameraTransform != null)
+        {
+            // Minimap camera is parented to the player, but we want it to behave like the main camera rotation-wise.
+            _minimapCameraTransform.rotation = _mainCameraTransform.rotation;
+        }
+    }
+
     private void FixedUpdate()
     {
         if (isRolling)
@@ -116,11 +137,11 @@ public class PlayerMovement : MonoBehaviour
         moveX = PlayerControls.Instance != null ? PlayerControls.Instance.horizontalInput : 0f;
         moveY = Input.GetAxisRaw("Vertical");
         Vector2 moveDirection = new Vector2(moveX, moveY).normalized;
-
         float velocity = moveForce;
 
         if (isSlowing)
             velocity *= slowFactorPlayer;
+
         myBody.linearVelocity = moveDirection * velocity;
     }
 

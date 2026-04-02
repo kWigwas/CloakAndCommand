@@ -11,10 +11,14 @@
 
   Editor loads via Assets/Art. Player builds need Resources (same logical path) or Addressables.
 -->
-## Single Spagetty Games
-presents
+<!-- ## Single Spagetty Games --> 
+![Single Spagetty Games](Art/StudioLogoWhite|480)
+### PRESENTS
 
-![GameLogo](Art/LogoWhite|1980)
+
+
+
+![Attack of the Radioactive Things](Art/LogoWhite|1660)
 <!-- Attack of the Radioactive Things -->
 
 
@@ -46,6 +50,7 @@ Hari Vallath
 
 
 ## NARRATIVE
+
 
 
 #### Narrative Director
@@ -147,14 +152,21 @@ Hari Vallath
 
 #### Music
 
-Chiptune Heist Music – Bertsz
+##### Chiptune Heist Music
+Performed by Bertsz (Freesound)
 
-Radioactive – Imagine Dragons
+##### Piano Sonata No. 14
+Composed by Ludwig van Beethoven
+Performed by Nesrality (Pixabay.com)
 <!-- This one's a joke, don't submit game with it -->
 
 #### Additional Audio
 
-Death Enemy 2 (from Left: Aliened) – Kego Wigwas
+##### Death Enemy 2 (from Left: Aliened) 
+Performed by Kego Wigwas
+
+##### MGS Detected Sound
+Performed by jobro (Pixabay)
 <!-- Add audio asset names -->
 
 

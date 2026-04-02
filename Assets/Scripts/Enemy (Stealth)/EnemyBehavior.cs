@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -85,11 +86,61 @@ public class EnemyAI : MonoBehaviour
 
     public State CurrentState => _state;
 
+    /// <summary>
+    /// True while this unit is actively chasing the player (watcher <see cref="State.Chase"/> or <see cref="State.SprinterChase"/>).
+    /// <see cref="DynamicMusic"/> uses this to pick explore vs chase layers.
+    /// </summary>
+    public bool IsInChaseMusicState => _state == State.Chase || _state == State.SprinterChase;
+
+    static readonly List<EnemyAI> MusicQueryRegistry = new List<EnemyAI>();
+
+    /// <summary>Whether any registered <see cref="EnemyAI"/> is currently in a chase music state.</summary>
+    public static bool AnyEnemyInChaseMusicState()
+    {
+        for (int i = MusicQueryRegistry.Count - 1; i >= 0; i--)
+        {
+            var e = MusicQueryRegistry[i];
+            if (e == null)
+            {
+                MusicQueryRegistry.RemoveAt(i);
+                continue;
+            }
+            if (e.IsInChaseMusicState)
+                return true;
+        }
+        return false;
+    }
+
+    void OnEnable()
+    {
+        if (!MusicQueryRegistry.Contains(this))
+            MusicQueryRegistry.Add(this);
+    }
+
+    void OnDisable()
+    {
+        MusicQueryRegistry.Remove(this);
+    }
+
     private void Awake()
     {
         _vision = GetComponent<EnemyVision>();
         _movement = GetComponent<EnemyMovement>();
         TryGetComponent(out _archetype);
+        EnsureAudioSource();
+    }
+
+    private void EnsureAudioSource()
+    {
+        if (audioSource != null)
+            return;
+
+        if (!TryGetComponent(out audioSource))
+            audioSource = gameObject.AddComponent<AudioSource>();
+
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+        audioSource.loop = false;
     }
 
     private void Start()
@@ -299,7 +350,8 @@ public class EnemyAI : MonoBehaviour
         _state = State.SprinterChase;
         _hasEnteredChaseSequence = true;
         _sprinterChaseBlindTimer = 0f;
-        _vision.SetConeColor(_vision.SuspiciousFlashColor);
+        StopFlash();
+        _vision.SetConeColor(_vision.ChaseConeColor);
         if (_vision.PlayerTransform != null)
             _movement.ResetSprinterStaleChase(_vision.PlayerTransform.position);
         PlayRandomOneShot(chaseStartClips, chaseStartVolume);
@@ -439,6 +491,7 @@ public class EnemyAI : MonoBehaviour
             _watcherFirstChaseHasEnded = true;
 
         onEnterSearch?.Invoke();
+        DynamicMusic.NotifyEnemyEnteredSearch();
     }
 
     private void EnterChase()
@@ -545,9 +598,10 @@ public class EnemyAI : MonoBehaviour
     private void PlayOneShot(AudioClip clip, float volume)
     {
         if (clip == null) return;
+        EnsureAudioSource();
         if (audioSource != null)
         {
-            if (audioSource.outputAudioMixerGroup == null && GameAudio.SfxOutputGroup != null)
+            if (GameAudio.SfxOutputGroup != null)
                 audioSource.outputAudioMixerGroup = GameAudio.SfxOutputGroup;
             audioSource.PlayOneShot(clip, Mathf.Clamp01(volume));
             return;
@@ -583,4 +637,5 @@ public class EnemyAI : MonoBehaviour
     {
         return _state == State.Suspicious;
     }
+
 }

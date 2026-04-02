@@ -1,8 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections.Generic;
 
 /// <summary>
 /// Wire UI controls here (sliders, toggles, dropdown). Optionally assign an AudioMixer;
@@ -36,6 +37,8 @@ public class SettingsMenu : MonoBehaviour
         TryBindSlidersFromHierarchy();
         WireUiHandlers();
         RefreshUIFromSettings();
+        ApplyMixerFromSavedSettings();
+        StartCoroutine(DeferredRefreshSlidersAndMixer());
     }
 
     private void OnDisable()
@@ -206,6 +209,38 @@ public class SettingsMenu : MonoBehaviour
             qualityDropdown.SetValueWithoutNotify(GameSettings.QualityLevel);
             qualityDropdown.RefreshShownValue();
         }
+
+        RebuildSliderVisuals(masterSlider, musicSlider, sfxSlider);
+    }
+
+    void ApplyMixerFromSavedSettings()
+    {
+        if (audioMixer == null) return;
+        GameSettings.ApplyAudio(audioMixer, masterMixerParameter, musicMixerParameter, sfxMixerParameter);
+    }
+
+    IEnumerator DeferredRefreshSlidersAndMixer()
+    {
+        yield return null;
+        TryBindSlidersFromHierarchy();
+        RefreshUIFromSettings();
+        ApplyMixerFromSavedSettings();
+    }
+
+    static void RebuildSliderVisuals(Slider master, Slider music, Slider sfx)
+    {
+        Canvas.ForceUpdateCanvases();
+        RebuildSliderLayout(master);
+        RebuildSliderLayout(music);
+        RebuildSliderLayout(sfx);
+    }
+
+    static void RebuildSliderLayout(Slider s)
+    {
+        if (s == null) return;
+        var rt = s.transform as RectTransform;
+        if (rt != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
     }
 
     public void OnMasterVolumeChanged(float value)

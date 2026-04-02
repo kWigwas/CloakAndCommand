@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -34,13 +33,13 @@ public class PauseMenu : MonoBehaviour
     {
         pauseMenu.SetActive(true);
         isPaused = true;
-        Time.timeScale=0;
+        Time.timeScale = 0;
     }
 
     public void Resume()
     {
         pauseMenu.SetActive(false);
         isPaused = false;
-        Time.timeScale=1f;
+        Time.timeScale = 1f;
     }
 }

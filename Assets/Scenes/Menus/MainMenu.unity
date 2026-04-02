@@ -244,7 +244,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2718758688610816708, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
       propertyPath: m_LocalScale.y
-      value: 3.3849406
+      value: 3.125896
       objectReference: {fileID: 0}
     - target: {fileID: 2718758688610816708, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -385,7 +385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -428,7 +428,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: -200
+  m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -475,7 +475,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -184}
+  m_AnchoredPosition: {x: 0, y: -236}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &713507407
@@ -496,7 +496,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: -670
+  m_Spacing: -690
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -588,7 +588,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2718758688610816708, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
       propertyPath: m_LocalScale.y
-      value: 3.3849406
+      value: 3.125896
       objectReference: {fileID: 0}
     - target: {fileID: 2718758688610816708, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -893,14 +893,14 @@ RectTransform:
   m_GameObject: {fileID: 1859195158}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 89.744}
-  m_LocalScale: {x: 0.65374345, y: 0.65374345, z: 2.6156518}
+  m_LocalScale: {x: 0.7586957, y: 0.7586957, z: 3.0355697}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 456073134}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 288.89, y: -510}
+  m_AnchoredPosition: {x: 181.4, y: -506}
   m_SizeDelta: {x: 2048, y: 451}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1859195160
@@ -987,7 +987,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2718758688610816708, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
       propertyPath: m_LocalScale.y
-      value: 3.3849406
+      value: 3.125896
       objectReference: {fileID: 0}
     - target: {fileID: 2718758688610816708, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1369,7 +1369,11 @@ PrefabInstance:
     - target: {fileID: 354552893304500933, guid: 7d9e8376e0695ce42957654b9b41792d, type: 3}
       propertyPath: music
       value: 
-      objectReference: {fileID: 8300000, guid: a4624bd19c8a4ec41b3e967a34c626cb, type: 3}
+      objectReference: {fileID: 8300000, guid: 286627345b7b4cc4a96e35056c059f06, type: 3}
+    - target: {fileID: 354552893304500933, guid: 7d9e8376e0695ce42957654b9b41792d, type: 3}
+      propertyPath: musicOutputOverride
+      value: 
+      objectReference: {fileID: -3345614666380507768, guid: df74c75f96eadbf41adf237827007ef5, type: 2}
     - target: {fileID: 2371878967419273595, guid: 7d9e8376e0695ce42957654b9b41792d, type: 3}
       propertyPath: m_Name
       value: MenuMusic
