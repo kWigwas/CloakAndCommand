@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\Menus\GameSettings.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
+    <Compile Include="Assets\Scripts\Menus\MainMenuButtons.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\Scripts\Turrets\UIElement.cs" />
     <Compile Include="Assets\Scripts\Audio\DynamicMusic.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Menus\Pause\PauseMenu.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
+    <Compile Include="Assets\Scripts\Persistence\ScenePersistedIdentity.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Scripts\Turrets\Turret.cs" />
     <Compile Include="Assets\Scripts\Menus\SettingsAudioBootstrap.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="Assets\Scripts\Audio\MenuMusic.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\Player\SpawnLure.cs" />
+    <Compile Include="Assets\Scripts\Persistence\WatcherSummonSaveLink.cs" />
     <Compile Include="Assets\Scripts\Menus\InteractButton.cs" />
     <Compile Include="Assets\Scripts\Player\Controls.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
@@ -135,6 +138,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
     <Compile Include="Assets\Scripts\UI\LureCooldownHud.cs" />
     <Compile Include="Assets\Scripts\Enemy (Stealth)\EnemyMovement.cs" />
+    <Compile Include="Assets\Scripts\Persistence\SaveManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

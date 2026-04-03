@@ -167,6 +167,12 @@ Performed by Kego Wigwas
 
 ##### MGS Detected Sound
 Performed by jobro (Pixabay)
+
+##### Single Rock Hitting Wood
+Performed by worthahep88 (Freesound)
+
+##### Single Rock Hitting Wood 2
+Performed by worthahep88 (Freesound)
 <!-- Add audio asset names -->
 
 

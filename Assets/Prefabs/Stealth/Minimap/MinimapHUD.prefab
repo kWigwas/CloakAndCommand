@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 6286552432776455840}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3822875, y: 1.3822875, z: 1.3822875}
+  m_LocalScale: {x: 1.382288, y: 1.382288, z: 1.382288}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -93,7 +93,7 @@ MonoBehaviour:
   rotatePlayerIconWithFacing: 1
   enemyIcon: {fileID: 21300000, guid: e521bcd4ad275ab4b857bb934fccbc8c, type: 3}
   enemyColor: {r: 1, g: 1, b: 1, a: 1}
-  enemyIconSize: 18
+  enemyIconSize: 16
   rotateEnemyIconWithFacing: 1
   watcherMinimap:
     icon: {fileID: 0}

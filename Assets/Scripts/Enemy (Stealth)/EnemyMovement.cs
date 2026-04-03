@@ -87,8 +87,13 @@ public class EnemyMovement : MonoBehaviour
         if (dist <= chaseStopDistance) return;
         Vector2 dir = to / dist;
         dir = ApplySeparation(dir);
+        if (dir.sqrMagnitude < 1e-8f) return;
+        dir.Normalize();
         RotateTowardsDirection(dir, chaseTurnSpeed);
-        _body.MovePosition(_body.position + dir * (chaseSpeed * Time.fixedDeltaTime));
+        float step = Mathf.Min(chaseSpeed * Time.fixedDeltaTime, dist - chaseStopDistance);
+        if (step <= 0f) return;
+        _body.MovePosition(_body.position + dir * step);
+        TryDepenetrateFromPlayerIfOverlapping();
     }
 
     /// <summary>Planar move + turn (deploy / leave paths).</summary>
@@ -148,9 +153,13 @@ public class EnemyMovement : MonoBehaviour
             {
                 Vector2 dir = toTarget / dist;
                 dir = ApplySeparation(dir);
+                if (dir.sqrMagnitude < 1e-8f)
+                    return false;
+                dir.Normalize();
                 RotateTowardsDirection(dir, suspiciousTurnSpeed);
-                _body.MovePosition(_body.position +
-                    dir * (chaseSpeed * searchSpeedMultiplier * Time.fixedDeltaTime));
+                float moveSpd = chaseSpeed * searchSpeedMultiplier;
+                float step = Mathf.Min(moveSpd * Time.fixedDeltaTime, Mathf.Max(0f, dist - searchArrivalDistance));
+                _body.MovePosition(_body.position + dir * step);
             }
 
             return false;
@@ -237,6 +246,30 @@ public class EnemyMovement : MonoBehaviour
             _body.rotation, targetDeg, degreesPerSecond * Time.fixedDeltaTime));
     }
 
+    static bool IsPlayerCollider(Collider2D col) =>
+        col != null && col.GetComponentInParent<PlayerMovement>(true) != null;
+
+    void TryDepenetrateFromPlayerIfOverlapping()
+    {
+        if (_selfCollider == null) return;
+        float r = Mathf.Max(separationRadius, 0.55f);
+        int n = Physics2D.OverlapCircleNonAlloc(_body.position, r, _separationHits, separationMask);
+        for (int i = 0; i < n; i++)
+        {
+            var col = _separationHits[i];
+            if (col == null || col == _selfCollider || col.isTrigger || !IsPlayerCollider(col))
+                continue;
+            ColliderDistance2D cd = _selfCollider.Distance(col);
+            if (!cd.isOverlapped && cd.distance > 0.03f)
+                continue;
+            Vector2 nrm = cd.normal.sqrMagnitude > 1e-6f ? cd.normal : Vector2.right;
+            float push = cd.isOverlapped ? Mathf.Max(0.06f, -cd.distance + 0.03f) : Mathf.Max(0f, 0.05f - cd.distance);
+            if (push > 0f)
+                _body.MovePosition(_body.position + nrm * push);
+            return;
+        }
+    }
+
     private Vector2 ApplySeparation(Vector2 desiredDir)
     {
         if (!enableSeparation || desiredDir.sqrMagnitude < 1e-6f)
@@ -255,12 +288,17 @@ public class EnemyMovement : MonoBehaviour
             if (_selfCollider != null && col == _selfCollider) continue;
 
             var rb = col.attachedRigidbody;
-            if (rb == null || rb == _body) continue;
+            if ((rb == null || rb == _body) && !IsPlayerCollider(col)) continue;
 
             Vector2 nearest = col.ClosestPoint(_body.position);
             Vector2 toOther = nearest - _body.position;
             float d = toOther.magnitude;
-            if (d < 0.0001f) continue;
+            if (d < 0.0001f)
+            {
+                float ang = transform.GetInstanceID() * 0.913f;
+                away -= new Vector2(Mathf.Cos(ang), Mathf.Sin(ang));
+                continue;
+            }
 
             float w = 1f - Mathf.Clamp01(d / radius);
             away -= (toOther / d) * w;

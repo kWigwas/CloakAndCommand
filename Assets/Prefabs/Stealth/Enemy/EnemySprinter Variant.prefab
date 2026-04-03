@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4067941333343902883, guid: 3a1e4d5a37a12464cb6f9d8f50f51235, type: 3}
       propertyPath: chaseSpeed
-      value: 6.5
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 7817607800827764109, guid: 3a1e4d5a37a12464cb6f9d8f50f51235, type: 3}
       propertyPath: kind
@@ -72,8 +72,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemySprinter Variant
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8143750051493268641, guid: 3a1e4d5a37a12464cb6f9d8f50f51235, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

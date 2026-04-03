@@ -1,9 +1,13 @@
+using System;
 using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] GameObject pauseMenu;
     public static bool isPaused = false;
+
+    /// <summary>Raised when the pause menu opens (after <see cref="Time.timeScale"/> is set to 0).</summary>
+    public static event Action GamePaused;
 
     void Update()
     {
@@ -34,6 +38,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(true);
         isPaused = true;
         Time.timeScale = 0;
+        GamePaused?.Invoke();
     }
 
     public void Resume()

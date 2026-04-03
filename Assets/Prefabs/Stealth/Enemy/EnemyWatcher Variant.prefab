@@ -26,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3602747758012533136, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
       propertyPath: sprinterReinforceMaxCount
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3602747758012533136, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
       propertyPath: sprinterSweepAngularSpeed
@@ -46,7 +46,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3602747758012533136, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
       propertyPath: sprinterReinforceChanceAfterFirstCycle
-      value: 0.67
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5807021076996757932, guid: 9a782fad22586f84b960d0ac1834eade, type: 3}
       propertyPath: m_Color.b

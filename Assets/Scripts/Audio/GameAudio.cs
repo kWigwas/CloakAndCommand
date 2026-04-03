@@ -21,22 +21,25 @@ public static class GameAudio
     }
 
     /// <summary>
-    /// Plays a one-shot through the SFX mixer bus (volume slider applies via mixer).
+    /// Plays a one-shot through a mixer group (volume slider applies via mixer).
     /// <paramref name="volumeScale"/> is per-clip 0–1, not the global SFX setting.
-    /// If no SFX group is registered, uses <see cref="AudioSource.PlayClipAtPoint"/> scaled by <see cref="GameSettings.SfxVolume"/>.
+    /// <paramref name="outputGroupOverride"/> if set, routes here; otherwise uses <see cref="SfxOutputGroup"/>.
+    /// If neither is set, uses <see cref="AudioSource.PlayClipAtPoint"/> scaled by <see cref="GameSettings.SfxVolume"/>.
     /// </summary>
-    public static void PlaySfx(AudioClip clip, Vector3 worldPosition, float volumeScale = 1f)
+    public static void PlaySfx(AudioClip clip, Vector3 worldPosition, float volumeScale = 1f, AudioMixerGroup outputGroupOverride = null)
     {
         if (clip == null) return;
         GameSettings.EnsureLoaded();
         volumeScale = Mathf.Clamp01(volumeScale);
 
-        if (SfxOutputGroup != null)
+        AudioMixerGroup group = outputGroupOverride != null ? outputGroupOverride : SfxOutputGroup;
+
+        if (group != null)
         {
             var go = new GameObject("OneShotSFX");
             go.transform.position = worldPosition;
             var src = go.AddComponent<AudioSource>();
-            src.outputAudioMixerGroup = SfxOutputGroup;
+            src.outputAudioMixerGroup = group;
             src.spatialBlend = 0f;
             src.PlayOneShot(clip, volumeScale);
             Object.Destroy(go, clip.length + 0.05f);

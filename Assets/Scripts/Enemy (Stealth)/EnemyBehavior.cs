@@ -86,6 +86,75 @@ public class EnemyAI : MonoBehaviour
 
     public State CurrentState => _state;
 
+    /// <summary>Called by <see cref="SaveManager"/> after it restores private fields via reflection.</summary>
+    public void RestoreVisualsAfterSave(bool patrolBehaviourEnabled)
+    {
+        SyncVisionAndMovementAfterSaveLoad(patrolBehaviourEnabled);
+    }
+
+    void SyncVisionAndMovementAfterSaveLoad(bool patrolWasEnabled)
+    {
+        if (_sprinterFlow)
+        {
+            if (patrolBehaviour != null)
+                patrolBehaviour.enabled = false;
+
+            switch (_state)
+            {
+                case State.SprinterDeploy:
+                case State.SprinterSweep:
+                case State.SprinterLeave:
+                    _vision.SetIdleConeSway(false);
+                    _vision.SetConeColor(_vision.SuspiciousFlashColor);
+                    break;
+                case State.SprinterChase:
+                    _vision.SetIdleConeSway(false);
+                    _vision.SetConeColor(_vision.ChaseConeColor);
+                    if (_vision.PlayerTransform != null)
+                        _movement.ResetSprinterStaleChase(_vision.PlayerTransform.position);
+                    break;
+            }
+
+            return;
+        }
+
+        _vision.SetIdleConeSway(false);
+
+        switch (_state)
+        {
+            case State.Idle:
+                StopFlash();
+                _vision.SetConeColor(_vision.CalmConeColor);
+                if (patrolBehaviour != null)
+                    patrolBehaviour.enabled = patrolWasEnabled;
+                if (_archetype != null && _archetype.Kind == EnemyKind.Watcher)
+                {
+                    float half = Mathf.Clamp(_archetype.IdleSwayDegrees, 2f, 24f);
+                    float sweep = Mathf.Max(4f, _archetype.IdleSwaySpeed * 10f);
+                    _movement.BeginIdleLookAround(half, sweep, 0.55f);
+                }
+                else
+                    _movement.BeginIdleLookAround(8f, 10f, 0.5f);
+                break;
+            case State.Suspicious:
+                if (patrolBehaviour != null)
+                    patrolBehaviour.enabled = false;
+                StartFlash();
+                break;
+            case State.Search:
+                if (patrolBehaviour != null)
+                    patrolBehaviour.enabled = false;
+                _movement.BeginSearch();
+                _vision.SetConeColor(_vision.SearchConeColor);
+                break;
+            case State.Chase:
+                if (patrolBehaviour != null)
+                    patrolBehaviour.enabled = false;
+                _vision.SetConeColor(_vision.ChaseConeColor);
+                break;
+        }
+    }
+
     /// <summary>
     /// True while this unit is actively chasing the player (watcher <see cref="State.Chase"/> or <see cref="State.SprinterChase"/>).
     /// <see cref="DynamicMusic"/> uses this to pick explore vs chase layers.
