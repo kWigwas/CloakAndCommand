@@ -5,12 +5,12 @@ public class Bullet : MonoBehaviour
 {
 
     [Header("Attributes")]
-    [SerializeField] private float speed = 3f;
+    [SerializeField] protected float speed = 8f;
 
-    private GameObject bulletTarget;
-    private float bulletDamage = 0f;
+    protected GameObject bulletTarget;
+    protected float bulletDamage = 0f;
 
-    private void Update()
+    protected void Update()
     {
         if (bulletTarget != null)
         {
@@ -28,7 +28,7 @@ public class Bullet : MonoBehaviour
         bulletDamage = damage;
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         TDEnemyProperties objectHitScript = other.gameObject.GetComponent<TDEnemyProperties>();
         objectHitScript.TakeDamage(bulletDamage);

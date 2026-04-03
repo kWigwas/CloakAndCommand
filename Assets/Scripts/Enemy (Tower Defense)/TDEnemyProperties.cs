@@ -20,6 +20,11 @@ public class TDEnemyProperties: MonoBehaviour
     private float finalDist;
     private int inspectIndex;
 
+    private bool affectedByDOT = false;
+    private float DOTDamage;
+    private float DOTInterval;
+    private float DOTTimer = 0f;
+
     void Awake()
     {
         myBody = GetComponent<Rigidbody2D>();
@@ -65,6 +70,20 @@ public class TDEnemyProperties: MonoBehaviour
 
     void Update()
     {
+        if (affectedByDOT)
+        {
+            if (DOTTimer < DOTInterval)
+            {
+                DOTTimer += Time.deltaTime;
+            }
+
+            if (DOTTimer > DOTInterval)
+            {
+                TakeDamage(DOTDamage);
+                DOTTimer = 0;
+            }
+        }
+
         if (health <= 0)
         {
             TDEnemyCount.Instance.DecrementCount(); //Will go into negatives if toggleCount disabled
@@ -104,6 +123,26 @@ public class TDEnemyProperties: MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
+    }
+
+    public void SufferDOT(float damage, float interval)
+    {
+        if (!affectedByDOT)
+        {
+            affectedByDOT = true;
+            DOTDamage = damage;
+            DOTInterval = interval;
+            ParticleSystem ps = gameObject.GetComponent<ParticleSystem>();
+            ps.Play();
+        }
+        else
+        {
+            if (damage*interval > DOTDamage*DOTInterval)
+            {
+                DOTDamage = damage;
+                DOTInterval = interval;
+            }
+        }
     }
 
     public float GetPathDist()

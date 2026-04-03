@@ -6,26 +6,35 @@ public class Turret : MonoBehaviour
 {
 
     [Header("References")]
-    [SerializeField] private LayerMask enemyMask;
-    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] protected LayerMask enemyMask;
+    [SerializeField] protected GameObject bulletPrefab;
 
     [Header("Attributes")]
-    [SerializeField] private bool spawnBullet = true;
-    [SerializeField] private float range;
-    [SerializeField] private float damage;
-    [SerializeField] private float attackInterval;
-    [SerializeField] private bool useCharges = false;
-    [SerializeField] private float chargeTime;
-    [SerializeField] private int maxCharges;
+    [SerializeField] protected bool spawnBullet = true;
+    [SerializeField] protected float range;
+    [SerializeField] protected float damage;
+    [SerializeField] protected float attackInterval;
+    [SerializeField] protected bool useCharges = false;
+    [SerializeField] protected float chargeTime;
+    [SerializeField] protected int maxCharges;
+    [SerializeField] protected float rotationSpeed = 120f;
+    [SerializeField] protected bool useDOT = false;
+    [SerializeField] protected float DOTInterval;
 
-    private GameObject target;
-    private float attackTimer;
-    private int currentCharges;
-    private float chargeProgress;
+    protected GameObject target;
+    protected float attackTimer;
+    protected int currentCharges;
+    protected float chargeProgress;
 
 
-    private void Update()
+    protected virtual void Update()
     {
+        findTarget();
+
+        if (target != null)
+        {
+            RotateToTarget();
+        }
 
         if (attackTimer < attackInterval)
         {
@@ -34,8 +43,7 @@ public class Turret : MonoBehaviour
         
         if (attackTimer >= attackInterval)
         {
-            findTarget();
-            if (target != null)
+            if (target != null && isFacingTarget()) //the target != null check isn't necessary since isFacingTarget already checks this; i've kept it here for clarity and future proofing, in case isFacingTarget is changed in the future
             {
                 if (!useCharges)
                 {
@@ -67,14 +75,25 @@ public class Turret : MonoBehaviour
 
     }
 
-    private void attack()
+    protected virtual void attack()
     {
         if (spawnBullet)
         {
-            GameObject bulletInstance = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-            Bullet bulletScript = bulletInstance.GetComponent<Bullet>();
-            bulletScript.SetTarget(target);
-            bulletScript.SetDamage(damage);
+            if(!useDOT)
+            {
+                GameObject bulletInstance = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+                Bullet bulletScript = bulletInstance.GetComponent<Bullet>();
+                bulletScript.SetTarget(target);
+                bulletScript.SetDamage(damage);
+            }
+            else
+            {
+                GameObject bulletInstance = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+                DOTBullet bulletScipt = bulletInstance.GetComponent<DOTBullet>();
+                bulletScipt.SetTarget(target);
+                bulletScipt.SetDamage(damage);
+                bulletScipt.setDOTInterval(DOTInterval);
+            }
         }
         else
         {
@@ -83,9 +102,8 @@ public class Turret : MonoBehaviour
         }
     }
 
-    private void findTarget()
+    protected virtual void findTarget()
     {
-
         target = null;
 
         RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, range, (Vector2)transform.position, 0f, enemyMask);
@@ -108,13 +126,37 @@ public class Turret : MonoBehaviour
         }
     }
 
+    protected virtual void RotateToTarget()
+    {
+        float angle = Mathf.Atan2(target.transform.position.y - transform.position.y, target.transform.position.x - transform.position.x) * Mathf.Rad2Deg - 90f;
+
+        Quaternion targetRotation = Quaternion.Euler(0f, 0f, angle);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
+    protected virtual bool isFacingTarget()
+    {
+        if (target == null)
+        {
+            return false;
+        }
+
+        Vector3 directionToTarget = (target.transform.position - transform.position).normalized;
+        float dotProduct = Vector3.Dot(transform.up, directionToTarget);
+
+        if (dotProduct > 0.95f)
+        {
+            return true;
+        }
+        else return false;
+    }
+
     //The function below shows the tower's range in the editor, but not during gameplay
     //Should be changed at some point
 
-    private void OnDrawGizmosSelected()
+    protected void OnDrawGizmosSelected()
     {
         Handles.color = Color.darkOrange;
         Handles.DrawWireDisc(transform.position, transform.forward, range);
     }
-
 }
