@@ -109,9 +109,12 @@ MonoBehaviour:
     m_Bits: 64
   bulletPrefab: {fileID: 4158397670719491030, guid: 5023010d828db5846b49ff5dc9f3860e, type: 3}
   spawnBullet: 0
-  range: 7
+  range: 8
   damage: 7
   attackInterval: 3.5
   useCharges: 0
   chargeTime: 0
   maxCharges: 0
+  rotationSpeed: 120
+  useDOT: 0
+  DOTInterval: 0
