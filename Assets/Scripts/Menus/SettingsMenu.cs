@@ -20,6 +20,12 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] private Toggle vsyncToggle;
     [SerializeField] private TMP_Dropdown qualityDropdown;
 
+    [Header("Controls sub-panel (optional)")]
+    [Tooltip("Parent of display/audio controls; hidden when the controls panel is open.")]
+    [SerializeField] private GameObject settingsBodyRoot;
+    [Tooltip("Optional controls/help sub-panel; start inactive if you use ShowControlsPanel.")]
+    [SerializeField] private GameObject controlsRebindPanel;
+
     [Header("Audio (optional)")]
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private string masterMixerParameter = "MasterVol";
@@ -38,6 +44,7 @@ public class SettingsMenu : MonoBehaviour
         WireUiHandlers();
         RefreshUIFromSettings();
         ApplyMixerFromSavedSettings();
+        HideControlsPanel();
         StartCoroutine(DeferredRefreshSlidersAndMixer());
     }
 
@@ -291,5 +298,23 @@ public class SettingsMenu : MonoBehaviour
         GameSettings.ResetToDefaults();
         GameSettings.ApplyAudio(audioMixer, masterMixerParameter, musicMixerParameter, sfxMixerParameter);
         RefreshUIFromSettings();
+    }
+
+    /// <summary>Hook a &quot;Controls&quot; button to this. Assign <see cref="controlsRebindPanel"/> (and optionally <see cref="settingsBodyRoot"/>) in the inspector.</summary>
+    public void ShowControlsPanel()
+    {
+        if (controlsRebindPanel != null)
+            controlsRebindPanel.SetActive(true);
+        if (settingsBodyRoot != null)
+            settingsBodyRoot.SetActive(false);
+    }
+
+    /// <summary>Hook a Back button on the controls panel to return to the rest of settings.</summary>
+    public void HideControlsPanel()
+    {
+        if (controlsRebindPanel != null)
+            controlsRebindPanel.SetActive(false);
+        if (settingsBodyRoot != null)
+            settingsBodyRoot.SetActive(true);
     }
 }

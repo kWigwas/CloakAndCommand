@@ -136,7 +136,7 @@ public class PlayerMovement : MonoBehaviour
         if (isRolling) return;
 
         moveX = PlayerControls.Instance != null ? PlayerControls.Instance.horizontalInput : 0f;
-        moveY = Input.GetAxisRaw("Vertical");
+        moveY = PlayerControls.Instance != null ? PlayerControls.Instance.verticalInput : 0f;
         Vector2 moveDirection = new Vector2(moveX, moveY).normalized;
         float velocity = moveForce;
 
