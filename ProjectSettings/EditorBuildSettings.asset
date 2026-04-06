@@ -23,6 +23,21 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TowerDefenseConcept.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/TDLevels/TDLevel1.unity
+    guid: 890bfbf2e755c514a83e796f52b5621d
+  - enabled: 1
+    path: Assets/Scenes/TDLevels/TDLevel2.unity
+    guid: 394abf01264587d4094abdca78952adc
+  - enabled: 1
+    path: Assets/Scenes/TDLevels/TDLevel3.unity
+    guid: 46df9153eade794418de5026a12e37e4
+  - enabled: 1
+    path: Assets/Scenes/TDLevels/TDLevel4.unity
+    guid: 6ceb6544c2f9e354bb74bfa6f31c620f
+  - enabled: 1
+    path: Assets/Scenes/TDLevels/TDMergePaths.unity
+    guid: bb109829517cddc4ebe848e96758efc9
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -117,7 +118,7 @@ public class EnemyMovement : MonoBehaviour
             ClearPlayerCollisionIgnore();
 
         _ignoredPlayerBodyRoot = bodyRoot;
-        _ignoredPlayerColliders = bodyRoot.GetComponentsInChildren<Collider2D>(true);
+        _ignoredPlayerColliders = CollectPlayerCollidersForChaseIgnore(bodyRoot);
         ApplyPlayerCollisionIgnore(true);
     }
 
@@ -148,6 +149,26 @@ public class EnemyMovement : MonoBehaviour
         ApplyPlayerCollisionIgnore(false);
         _ignoredPlayerBodyRoot = null;
         _ignoredPlayerColliders = null;
+    }
+
+    /// <summary>
+    /// <see cref="EnemyPlayerTouch"/> uses a trigger that must keep receiving overlaps during chase.
+    /// </summary>
+    static Collider2D[] CollectPlayerCollidersForChaseIgnore(Transform bodyRoot)
+    {
+        var all = bodyRoot.GetComponentsInChildren<Collider2D>(true);
+        var keep = new List<Collider2D>(all.Length);
+        for (int i = 0; i < all.Length; i++)
+        {
+            Collider2D c = all[i];
+            if (c == null)
+                continue;
+            if (c.GetComponentInParent<EnemyPlayerTouch>(true) != null)
+                continue;
+            keep.Add(c);
+        }
+
+        return keep.ToArray();
     }
 
     // ────────────────────────────────────────────────────────────────────────

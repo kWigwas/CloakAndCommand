@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public sealed class PlayerHealth : MonoBehaviour
 {
     [Tooltip("Scene to load on death (must be in Build Settings).")]
-    [SerializeField] string gameOverSceneName = "GameOver";
+    [SerializeField] string gameOverSceneName = "GameOverMenu";
 
     bool _dead;
 
