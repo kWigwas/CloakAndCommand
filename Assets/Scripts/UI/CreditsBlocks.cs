@@ -326,16 +326,39 @@ public static class CreditsBlocks
 
     static float MaxImageDisplayWidth(RectTransform layoutRoot, TMP_Text template)
     {
-        var panel = layoutRoot.parent as RectTransform;
-        if (panel != null && panel.rect.width > 8f)
-            return panel.rect.width * 0.92f;
+        if (layoutRoot != null)
+        {
+            // Walk parents — credits column’s direct parent is often 0 wide on first frame (WebGL / itch embed).
+            for (RectTransform p = layoutRoot.parent as RectTransform;
+                 p != null;
+                 p = p.parent as RectTransform)
+            {
+                if (p.rect.width > 8f)
+                    return Mathf.Max(8f, p.rect.width * 0.92f);
+            }
+
+            Canvas canvas = layoutRoot.GetComponentInParent<Canvas>();
+            if (canvas != null)
+            {
+                var canvasRt = canvas.transform as RectTransform;
+                if (canvasRt != null && canvasRt.rect.width > 8f)
+                    return Mathf.Max(8f, canvasRt.rect.width * 0.92f);
+
+                var scaler = canvas.GetComponent<CanvasScaler>();
+                if (scaler != null && scaler.uiScaleMode == CanvasScaler.ScaleMode.ScaleWithScreenSize)
+                {
+                    float rw = scaler.referenceResolution.x;
+                    if (rw > 8f)
+                        return Mathf.Max(8f, rw * 0.92f);
+                }
+            }
+        }
 
         if (template != null)
         {
             float tw = template.rectTransform.rect.width;
-            // Old setups used huge placeholder widths (e.g. 5000) — ignore for clamping.
             if (tw > 8f && tw < 4000f)
-                return tw * 0.92f;
+                return Mathf.Max(8f, tw * 0.92f);
         }
 
         return 800f;
@@ -398,6 +421,15 @@ public static class CreditsBlocks
                 h = th;
         }
         else if (w > maxDisplay && w > 0.01f)
+        {
+            float s = maxDisplay / w;
+            w *= s;
+            h *= s;
+        }
+
+        // Markdown |width| overrides used to skip clamping; on WebGL layout rects can be 0 so maxDisplay
+        // fell back poorly, and values like 1660 on an 800-wide reference canvas overflowed the panel.
+        if (maxDisplay > 8f && w > maxDisplay && w > 0.01f)
         {
             float s = maxDisplay / w;
             w *= s;

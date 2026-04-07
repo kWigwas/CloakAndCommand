@@ -40,6 +40,9 @@ public class TDCamera : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+        if (PauseMenu.isPaused)
+            return;
+
         //Use clamp to prevent the camera from moveing across the dynamically determined boundaries
         float clampedX = Mathf.Clamp(transform.position.x, minX, maxX);
         float clampedY = Mathf.Clamp(transform.position.y, 0, 0); //Needed for second argument; Always set top 0

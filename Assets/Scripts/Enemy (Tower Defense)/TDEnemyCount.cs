@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -75,6 +74,8 @@ public class TDEnemyCount : MonoBehaviour
         {
             Debug.Log("All enemies cleared");
             RecordVictoryProgress();
+            if (TryCreditsIfAllTdStagesDone())
+                return;
             TryGoBack();
             return;
         }
@@ -83,8 +84,20 @@ public class TDEnemyCount : MonoBehaviour
         {
             Debug.Log("All enemies managed"); //This message will always print
             RecordVictoryProgress();
+            if (TryCreditsIfAllTdStagesDone())
+                return;
             TryGoBack();
         }
+    }
+
+    /// <summary>
+    /// Hub-based <see cref="TDCompleteRedirect"/> misses wins when back-stack is empty (MainMenu, Continue, etc.).
+    /// </summary>
+    static bool TryCreditsIfAllTdStagesDone()
+    {
+        return TDCompleteRedirect.TryOpenCreditsIfAllTdComplete(
+            TDCompleteRedirect.DefaultCreditsSceneName,
+            redirectOnlyOnce: true);
     }
 
     void TryGoBack()

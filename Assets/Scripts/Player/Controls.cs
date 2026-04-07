@@ -25,6 +25,23 @@ public class PlayerControls : MonoBehaviour
     };
 
     /// <summary>
+    /// Shipped keyboard defaults for each Input Manager axis <c>m_Name</c> (matches <c>ProjectSettings/InputManager.asset</c>).
+    /// Player builds cannot read InputManager.asset; <see cref="ControlLabel"/> uses this so HUD shows keys instead of axis names (e.g. <c>E</c> not <c>Interact</c>).
+    /// </summary>
+    static readonly Dictionary<string, string> RuntimeDefaultKeyByInputAxisName =
+        new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            { "Horizontal", "left / right" },
+            { "Vertical", "down / up" },
+            { "Fire1", "left ctrl" },
+            { "Fire2", "left alt" },
+            { "Fire3", "left shift" },
+            { "Jump", "space" },
+            { "Interact", "e" },
+            { "Pause", "escape" },
+        };
+
+    /// <summary>
     /// How each Input Manager button string should look in UI (what <see cref="ControlLabel.GetAssignedKey"/> shows).
     /// Keys must match Project Settings → Input Manager (positive/negative button), case-insensitive.
     /// </summary>
@@ -96,6 +113,18 @@ public class PlayerControls : MonoBehaviour
         }
 
         return string.Join(sep, parts);
+    }
+
+    /// <summary>Keyboard display string for <paramref name="inputManagerAxisName"/> when Input Manager cannot be queried (player builds).</summary>
+    public static bool TryGetRuntimeDefaultKeyDisplay(string inputManagerAxisName, out string display)
+    {
+        display = null;
+        if (string.IsNullOrEmpty(inputManagerAxisName))
+            return false;
+        if (!RuntimeDefaultKeyByInputAxisName.TryGetValue(inputManagerAxisName, out string raw))
+            return false;
+        display = FormatBindingKeyString(raw);
+        return !string.IsNullOrEmpty(display);
     }
 
     [Header("Input Names")]

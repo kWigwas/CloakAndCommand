@@ -28,6 +28,9 @@ public class Turret : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (PauseMenu.isPaused)
+            return;
+
         findTarget();
 
         if (target != null)

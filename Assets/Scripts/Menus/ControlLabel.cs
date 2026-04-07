@@ -152,6 +152,9 @@ public class ControlLabel : MonoBehaviour
 
             return inputName;
         }
+#else
+        if (PlayerControls.TryGetRuntimeDefaultKeyDisplay(inputName, out string runtime))
+            return runtime;
 #endif
         return inputName;
     }

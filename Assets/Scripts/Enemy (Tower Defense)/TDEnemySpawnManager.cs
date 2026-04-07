@@ -34,6 +34,7 @@ public class EnemySpawnManager : MonoBehaviour
     IEnumerator InitDelay()
     {
         yield return new WaitForSeconds(initDelay);
+        yield return PauseMenu.WaitWhilePaused();
         StartCoroutine(SpawnEnemies());
     }
 
@@ -43,6 +44,7 @@ public class EnemySpawnManager : MonoBehaviour
         while (!stopSpawn)
         {
             yield return new WaitForSeconds(spawnDelay);
+            yield return PauseMenu.WaitWhilePaused();
             if (spawnCount >= spawnLimit)
             {
                 stopSpawn = true;

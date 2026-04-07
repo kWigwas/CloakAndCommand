@@ -4,6 +4,10 @@ A top-down **stealth-action-tower-defense** game in Unity.
 
 This repository is a Unity project with some local caches missing. When you open it in Unity, it will generate the missing files automatically. This may take a few minutes.
 
+## Links
+- [GitHub repos](github.com/hairmony/AttackOfTheRadioactiveThings)
+- [Itch.io](hairmony.itch.io/attack-of-the-radioactive-things)
+
 ## Prerequisites
 
 - **Unity Editor** `6000.3.6f1`.
@@ -54,12 +58,6 @@ You can now press **Play** in the Editor to run the project.
 | `Packages/` | Unity package manifest etc. |
 | `ProjectSettings/` | Editor version, input, graphics (URP), build scene list, etc. |
 | `Assembly-CSharp.csproj` | Generated C# project maintained by Unity |
-
-## Authors
-
-- Hariharan Vallath
-- Mishaal Patel
-ty |
 
 ## Authors
 

@@ -1,0 +1,598 @@
+fileFormatVersion: 2
+guid: b5c86d398202bb048b42d8b2eea80500
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1193893702468910905
+    second: StudioLogoWhite_0
+  - first:
+      213: 1425205662079248878
+    second: StudioLogoWhite_1
+  - first:
+      213: 1786281234938129799
+    second: StudioLogoWhite_2
+  - first:
+      213: 5921456059831023925
+    second: StudioLogoWhite_3
+  - first:
+      213: -2813970767756461834
+    second: StudioLogoWhite_4
+  - first:
+      213: 1918734871789925235
+    second: StudioLogoWhite_5
+  - first:
+      213: 6698863037187124385
+    second: StudioLogoWhite_6
+  - first:
+      213: 6506884529198515626
+    second: StudioLogoWhite_7
+  - first:
+      213: -7825855862130578208
+    second: StudioLogoWhite_8
+  - first:
+      213: -2977271465129916231
+    second: StudioLogoWhite_9
+  - first:
+      213: 4354853807308767282
+    second: StudioLogoWhite_10
+  - first:
+      213: -6820167733601461840
+    second: StudioLogoWhite_11
+  - first:
+      213: -349576225012338568
+    second: StudioLogoWhite_12
+  - first:
+      213: -579562608774776193
+    second: StudioLogoWhite_13
+  - first:
+      213: 928875036177933752
+    second: StudioLogoWhite_14
+  - first:
+      213: 1879269863813715586
+    second: StudioLogoWhite_15
+  - first:
+      213: 2368794832626370486
+    second: StudioLogoWhite_16
+  - first:
+      213: -252380302038472265
+    second: StudioLogoWhite_17
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: StudioLogoWhite_0
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 197
+        width: 180
+        height: 143
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c0c3ccc0007e6fe0800000000000000
+      internalID: -1193893702468910905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_1
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 188
+        width: 144
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee9eb14aff857c310800000000000000
+      internalID: 1425205662079248878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_2
+      rect:
+        serializedVersion: 2
+        x: 386
+        y: 196
+        width: 75
+        height: 149
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78dee6da1552ac810800000000000000
+      internalID: 1786281234938129799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_3
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 202
+        width: 132
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 539ff47c9ec3d2250800000000000000
+      internalID: 5921456059831023925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_4
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 221
+        width: 135
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f8fa8bee74c2f8d0800000000000000
+      internalID: -2813970767756461834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_5
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 231
+        width: 139
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37371333337b0aa10800000000000000
+      internalID: 1918734871789925235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_6
+      rect:
+        serializedVersion: 2
+        x: 791
+        y: 233
+        width: 149
+        height: 117
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ac6882b07427fc50800000000000000
+      internalID: 6698863037187124385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_7
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 70
+        width: 164
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa5cc5d11091d4a50800000000000000
+      internalID: 6506884529198515626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_8
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 72
+        width: 149
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ec6c4a7e89f46390800000000000000
+      internalID: -7825855862130578208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_9
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 72
+        width: 157
+        height: 115
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b84601706b9ea6d0800000000000000
+      internalID: -2977271465129916231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_10
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 71
+        width: 142
+        height: 129
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2308569f67c8f6c30800000000000000
+      internalID: 4354853807308767282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_11
+      rect:
+        serializedVersion: 2
+        x: 560
+        y: 73
+        width: 126
+        height: 143
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b99a12c495e951a0800000000000000
+      internalID: -6820167733601461840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_12
+      rect:
+        serializedVersion: 2
+        x: 678
+        y: 73
+        width: 142
+        height: 153
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 870b736864e062bf0800000000000000
+      internalID: -349576225012338568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_13
+      rect:
+        serializedVersion: 2
+        x: 809
+        y: 73
+        width: 140
+        height: 154
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7a71e2c0eaf4f7f0800000000000000
+      internalID: -579562608774776193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_14
+      rect:
+        serializedVersion: 2
+        x: 934
+        y: 73
+        width: 135
+        height: 151
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b52d1c8ce604ec00800000000000000
+      internalID: 928875036177933752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_15
+      rect:
+        serializedVersion: 2
+        x: 698
+        y: 8
+        width: 54
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28696bdfbf1841a10800000000000000
+      internalID: 1879269863813715586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_16
+      rect:
+        serializedVersion: 2
+        x: 749
+        y: 9
+        width: 123
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b7c9709956afd020800000000000000
+      internalID: 2368794832626370486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StudioLogoWhite_17
+      rect:
+        serializedVersion: 2
+        x: 872
+        y: 7
+        width: 98
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b9e0b4d37d5f7cf0800000000000000
+      internalID: -252380302038472265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      StudioLogoWhite_0: -1193893702468910905
+      StudioLogoWhite_1: 1425205662079248878
+      StudioLogoWhite_10: 4354853807308767282
+      StudioLogoWhite_11: -6820167733601461840
+      StudioLogoWhite_12: -349576225012338568
+      StudioLogoWhite_13: -579562608774776193
+      StudioLogoWhite_14: 928875036177933752
+      StudioLogoWhite_15: 1879269863813715586
+      StudioLogoWhite_16: 2368794832626370486
+      StudioLogoWhite_17: -252380302038472265
+      StudioLogoWhite_2: 1786281234938129799
+      StudioLogoWhite_3: 5921456059831023925
+      StudioLogoWhite_4: -2813970767756461834
+      StudioLogoWhite_5: 1918734871789925235
+      StudioLogoWhite_6: 6698863037187124385
+      StudioLogoWhite_7: 6506884529198515626
+      StudioLogoWhite_8: -7825855862130578208
+      StudioLogoWhite_9: -2977271465129916231
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

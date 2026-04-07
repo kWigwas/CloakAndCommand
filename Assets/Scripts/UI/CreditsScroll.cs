@@ -36,6 +36,9 @@ public class CreditsScroll : MonoBehaviour
 
     [SerializeField] bool useUnscaledTime = true;
 
+    [Tooltip("Keep visual scroll speed consistent across resolutions/itch embeds by compensating for Canvas scale.")]
+    [SerializeField] bool normalizeSpeedByCanvasScale = true;
+
     [Tooltip("When the last line has scrolled past the top of the visible area, snap back to the start.")]
     [SerializeField] bool loop = true;
 
@@ -465,30 +468,49 @@ public class CreditsScroll : MonoBehaviour
         return contentBottomY >= view.rect.yMax;
     }
 
+    float GetCanvasScaleCompensation()
+    {
+        if (!normalizeSpeedByCanvasScale)
+            return 1f;
+
+        Canvas canvas = null;
+        var rt = TargetContentRect;
+        if (rt != null)
+            canvas = rt.GetComponentInParent<Canvas>();
+        if (canvas == null)
+            canvas = GetComponentInParent<Canvas>();
+        if (canvas == null)
+            return 1f;
+
+        float scale = Mathf.Max(0.0001f, canvas.scaleFactor);
+        return 1f / scale;
+    }
+
     void Update()
     {
         if (!_positionReady)
             return;
 
         float dt = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+        float speedMul = GetCanvasScaleCompensation();
 
         var rt = TargetContentRect;
         if (rt != null)
         {
             var p = rt.anchoredPosition;
-            p.y += scrollSpeed * dt;
+            p.y += scrollSpeed * speedMul * dt;
             rt.anchoredPosition = p;
         }
         else
         {
             var pos = transform.localPosition;
-            pos.y += scrollSpeed * dt;
+            pos.y += scrollSpeed * speedMul * dt;
             transform.localPosition = pos;
         }
 
         ScrollBackgroundUv(dt);
-        ScrollParallax(dt);
-        ScrollParallaxImageStrip(dt);
+        ScrollParallax(dt, speedMul);
+        ScrollParallaxImageStrip(dt, speedMul);
 
         if (loop && CreditsFullyPastViewportTop())
             JumpToStart();
@@ -504,7 +526,7 @@ public class CreditsScroll : MonoBehaviour
         tiledBackground.uvRect = r;
     }
 
-    void ScrollParallax(float dt)
+    void ScrollParallax(float dt, float speedMul)
     {
         if (parallaxLayers == null) return;
 
@@ -512,9 +534,9 @@ public class CreditsScroll : MonoBehaviour
         {
             if (parallaxLayers[i] == null) continue;
 
-            float speed = scrollSpeed * parallaxSpeedScale;
+            float speed = scrollSpeed * parallaxSpeedScale * speedMul;
             if (parallaxSpeeds != null && i < parallaxSpeeds.Length)
-                speed = parallaxSpeeds[i];
+                speed = parallaxSpeeds[i] * speedMul;
 
             var p = parallaxLayers[i].anchoredPosition;
             p.y += speed * dt;
@@ -522,15 +544,16 @@ public class CreditsScroll : MonoBehaviour
         }
     }
 
-    void ScrollParallaxImageStrip(float dt)
+    void ScrollParallaxImageStrip(float dt, float speedMul)
     {
         if (parallaxBackground == null) return;
 
         var p = parallaxBackground.anchoredPosition;
-        p.y += parallaxImageScrollSpeed * dt;
+        p.y += parallaxImageScrollSpeed * speedMul * dt;
         parallaxBackground.anchoredPosition = p;
 
         if (loopParallaxImages && ParallaxImagesFullyPastViewportTop())
             parallaxBackground.anchoredPosition = _parallaxImageScrollStartAnchored;
     }
 }
+

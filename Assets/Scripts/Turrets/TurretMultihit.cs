@@ -14,6 +14,9 @@ public class TurretMultihit : Turret
 
     protected override void Update()
     {
+        if (PauseMenu.isPaused)
+            return;
+
         findTarget();
 
         if (targetList[0] != null)

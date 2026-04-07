@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
@@ -44,6 +45,22 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         pauseMenu.SetActive(false);
+        isPaused = false;
+        Time.timeScale = 1f;
+    }
+
+    /// <summary>Yields until <see cref="isPaused"/> is false (uses unscaled frames so it works even if time scale is wrong).</summary>
+    public static IEnumerator WaitWhilePaused()
+    {
+        while (isPaused)
+            yield return null;
+    }
+
+    void OnDestroy()
+    {
+        // Single-scene loads destroy this object while globals may still say "paused" with timeScale 0.
+        if (!isPaused)
+            return;
         isPaused = false;
         Time.timeScale = 1f;
     }

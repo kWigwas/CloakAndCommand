@@ -26,13 +26,13 @@ public class PlayerMovement : MonoBehaviour
     static readonly int AnimRolling = Animator.StringToHash("Rolling");
     static readonly int AnimAttack = Animator.StringToHash("Attack");
 
-    [Header("Time Slow")]
-    public bool canTimeSlow = false;
-    public float slowDuration = 2f;
-    public float slowFactor = 0.5f;
-    public float slowFactorPlayer = 1f;
-    public bool isSlowing = false;
-    private float slowTimer = 0f;
+    // [Header("Time Slow")] — disabled: player should not use time slow
+    // public bool canTimeSlow = false;
+    // public float slowDuration = 2f;
+    // public float slowFactor = 0.5f;
+    // public float slowFactorPlayer = 1f;
+    // public bool isSlowing = false;
+    // private float slowTimer = 0f;
 
     [Header("Roll")]
     public bool canRoll = true;
@@ -90,20 +90,19 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool(AnimRolling, isRolling);
         }
 
-        // TIME SLOW
-        if (canTimeSlow && !isSlowing && PlayerControls.Instance != null && PlayerControls.Instance.fire3Pressed)
-        {
-            StartTimeSlow();
-        }
-
-        if (isSlowing)
-        {
-            slowTimer -= Time.unscaledDeltaTime;
-            if (slowTimer <= 0f)
-                EndTimeSlow();
-        }
-
-        //myBody.gravityScale = isSlowing ? normalGravity * slowFactorPlayer : normalGravity;
+        // TIME SLOW (disabled)
+        // if (canTimeSlow && !isSlowing && !PauseMenu.isPaused && PlayerControls.Instance != null &&
+        //     PlayerControls.Instance.fire3Pressed)
+        // {
+        //     StartTimeSlow();
+        // }
+        //
+        // if (isSlowing)
+        // {
+        //     slowTimer -= Time.unscaledDeltaTime;
+        //     if (slowTimer <= 0f)
+        //         EndTimeSlow();
+        // }
 
         //ROLL
         if (canRoll && !isRolling && rollCooldownTimer <= 0f && PlayerControls.Instance != null && PlayerControls.Instance.rollPressed && canMove)
@@ -140,8 +139,8 @@ public class PlayerMovement : MonoBehaviour
         Vector2 moveDirection = new Vector2(moveX, moveY).normalized;
         float velocity = moveForce;
 
-        if (isSlowing)
-            velocity *= slowFactorPlayer;
+        // if (isSlowing)
+        //     velocity *= slowFactorPlayer;
 
         myBody.linearVelocity = moveDirection * velocity;
     }
@@ -182,27 +181,24 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void StartTimeSlow()
-    {
-        isSlowing = true;
-        slowTimer = slowDuration;
-        moveForce /= (slowFactorPlayer);
-        //myBody.gravityScale /= (slowFactorPlayer);
-
-        Time.timeScale = slowFactor;
-        Time.fixedDeltaTime = 0.02f * Time.timeScale;
-    }
-
-    void EndTimeSlow()
-    {
-        isSlowing = false;
-        moveForce *= (slowFactorPlayer);
-
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02f;
-
-        //myBody.gravityScale = normalGravity;
-    }
+    // void StartTimeSlow()
+    // {
+    //     isSlowing = true;
+    //     slowTimer = slowDuration;
+    //     moveForce /= (slowFactorPlayer);
+    //
+    //     Time.timeScale = slowFactor;
+    //     Time.fixedDeltaTime = 0.02f * Time.timeScale;
+    // }
+    //
+    // void EndTimeSlow()
+    // {
+    //     isSlowing = false;
+    //     moveForce *= (slowFactorPlayer);
+    //
+    //     Time.timeScale = PauseMenu.isPaused ? 0f : 1f;
+    //     Time.fixedDeltaTime = 0.02f;
+    // }
 
     void StartRoll()
     {

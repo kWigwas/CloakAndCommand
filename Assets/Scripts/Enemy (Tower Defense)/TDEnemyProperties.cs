@@ -119,6 +119,9 @@ public class TDEnemyProperties: MonoBehaviour
 
     void Update()
     {
+        if (PauseMenu.isPaused)
+            return;
+
         if (affectedByDOT)
         {
             if (DOTTimer < DOTInterval)

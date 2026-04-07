@@ -421,13 +421,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3481729307965433460, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1993531447}
-    - target: {fileID: 3481729307965433460, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3481729307965433460, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1993531447}
     - target: {fileID: 3481729307965433460, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: NewGame
@@ -590,7 +590,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -236}
+  m_AnchoredPosition: {x: 0, y: -166.99995}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &713507407
@@ -1015,7 +1015,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 181.4, y: -506}
+  m_AnchoredPosition: {x: 181.4, y: -437}
   m_SizeDelta: {x: 2048, y: 451}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1859195160
@@ -1340,6 +1340,7 @@ MonoBehaviour:
   playSceneName: StealthOpen
   backFallbackSceneName: MainMenu
   settingsSceneName: SettingsMenu
+  deleteLayoutSaveOnGameOverRetry: 1
 --- !u!114 &1993531448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1470,13 +1471,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3481729307965433460, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1993531447}
-    - target: {fileID: 3481729307965433460, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3481729307965433460, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1993531447}
     - target: {fileID: 3481729307965433460, guid: be1d9da826b1f7f4eb33a8aaad3cc0f4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ContinueGame
